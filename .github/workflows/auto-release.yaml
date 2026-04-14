@@ -1,4 +1,4 @@
-name: Авто-релиз
+name: auto-release
 
 on:
   push:
@@ -84,5 +84,3 @@ jobs:
             --target "${{ github.sha }}"
 
           echo "new_version=$new_version" >> $GITHUB_OUTPUT
-        env:
-          GH_TOKEN: ${{ github.token }}
