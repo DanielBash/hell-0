@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Hell-0, {{ target_user.username }}!</h1>
+
+{% if user.username == target_user.username %}
+<p>О, да это же ваш профиль! Хотите <a href="{{ url_for('auth.logout') }}">выйти</a>? Профиль доступен для редактирования <a href="{{ url_for('auth.edit') }}">на этой странице</a>.
+Возможно вы хотите посмотреть <a href="{{ url_for('messages.filter') }}">ящик системных уведомлений</a>?</p>
+{% else %}
+<p>Пожалуйста, будьте вежливы с данным пользователем.</p>
+{% endif%}
+
+<figure>
+<table>
+ <thead>
+  <tr>
+   <th>Параметр</th>
+   <th>Значение</th>
+  </tr>
+ </thead>
+ <tbody>
+    <tr>
+      <td>Привилегии</td>
+      <td>{{target_user.permission_group}}</td>
+    </tr>
+
+    <tr>
+      <td>Статус</td>
+      <td>{{target_user.status | safe}}</td>
+    </tr>
+
+    <tr>
+      <td>Зарегестрирован</td>
+      <td>{{target_user.registered_at}}</td>
+    </tr>
+ </tbody>
+</table>
+</figure>
+<p>Обо мне: {{target_user.bio | safe}}</p>
+Мои посту доступны <a href="{{ url_for('posts.posts', username=target_user.username) }}">по ссылке</a>!
+{% endblock %}

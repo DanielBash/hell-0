@@ -1,0 +1,88 @@
+name: Авто-релиз
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  bump-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Клонирование репозитория
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Настройка пользователя Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Определение типа изменения версии и создание релиза
+        id: version
+        env:
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+        run: |
+          bump_type=""
+          if [[ "$COMMIT_MSG" =~ ^\[PATCH\] ]]; then
+            bump_type="patch"
+          elif [[ "$COMMIT_MSG" =~ ^\[MINOR\] ]]; then
+            bump_type="minor"
+          elif [[ "$COMMIT_MSG" =~ ^\[MAJOR\] ]]; then
+            bump_type="major"
+          else
+            echo "Ключевое слово для изменения версии не найдено. Выход."
+            exit 0
+          fi
+
+          echo "Тип изменения: $bump_type"
+
+          latest_tag=$(git tag --list | grep -E '^v?[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -n1)
+
+          if [[ -z "$latest_tag" ]]; then
+            echo "Теги версий не найдены. Начинаем с v1.0.0"
+            latest_tag="v1.0.0"
+          fi
+
+          version="${latest_tag#v}"
+          IFS='.' read -r major minor patch <<< "$version"
+
+          echo "Текущая версия: $latest_tag (major=$major, minor=$minor, patch=$patch)"
+
+          case "$bump_type" in
+            major)
+              major=$((major + 1))
+              minor=0
+              patch=0
+              ;;
+            minor)
+              minor=$((minor + 1))
+              patch=0
+              ;;
+            patch)
+              patch=$((patch + 1))
+              ;;
+          esac
+
+          new_version="v${major}.${minor}.${patch}"
+          echo "Новая версия: $new_version"
+
+          git tag -a "$new_version" -m "Релиз $new_version"
+          git push origin "$new_version"
+
+          release_body=$(echo "$COMMIT_MSG" | sed -E 's/^\[(PATCH|MINOR|MAJOR)\][[:space:]]*//')
+
+          gh release create "$new_version" \
+            --title "$new_version" \
+            --notes "$release_body" \
+            --target "${{ github.sha }}"
+
+          echo "new_version=$new_version" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ github.token }}

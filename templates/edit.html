@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  {% for fieldname, errors in form.errors.items() %}
+    {% for error in errors %}
+<aside>
+<div class="card warn">
+ <p>{{ form[fieldname].label.text or fieldname }}</p>
+ <p>{{ error }}</p>
+</div>
+</aside>
+    {% endfor %}
+  {% endfor %}
+
+<h1>Редактировать профиль</h1>
+<p>Это форма редактирования вашего профиля, сам профиль <a href="{{ url_for('users.user', username=user.username) }}">здесь</a>. На случай, если вы потерялись, главная
+<a href="{{ url_for('main.index') }}">здесь</a>.</p>
+<form method="POST">
+      {{ form.hidden_tag() }}
+      <fieldset>
+          <legend>Edit</legend>
+            <p>{{ form.bio.label }}
+            {{ form.bio(size=32) }}</p>
+            <p>{{ form.status.label }}
+            {{ form.status(size=32) }}</p>
+      </fieldset>
+
+      <fieldset id="forms__action">
+        <legend>Отправить</legend>
+          {{ form.submit() }}
+      </fieldset>
+    </form>
+{% endblock %}

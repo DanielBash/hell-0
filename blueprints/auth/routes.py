@@ -1,0 +1,62 @@
+"""Шаблоны авторизации"""
+
+# -- импорт модулей
+import datetime
+from flask import current_app, flash, redirect, url_for, session, g
+from flask import Blueprint, render_template
+from core.core import register_user, check_credentials
+from core.flask_shortcuts.decorators import login_required
+from core.models import User, db
+from .forms import RegistrationForm, LoginForm, ProfileEditForm
+
+
+bp = Blueprint('auth', __name__)
+
+
+@bp.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = register_user(username=form.data['username'],
+                             password=form.data['password'],
+                             email=form.data['email'])
+        if user is None:
+            flash('Это имя пользователя занято.', 'Неудача')
+            return render_template('register.html', form=form, title='Регистрация')
+        else:
+            session['user_id'] = user.id
+            flash('Регистрация успешна!', 'Успех')
+        return redirect(url_for('main.index'))
+    return render_template('register.html', form=form, title='Регистрация')
+
+
+@bp.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        if check_credentials(form.data['username'], form.data['password']):
+            flash('Вы успешно зашли!', 'Успех')
+            session['user_id'] = User.query.filter_by(username=form.data['username']).first().id
+            return redirect(url_for('main.index'))
+        else:
+            flash('Неверные данные пользователя!', 'Warning')
+            return redirect(url_for('auth.login'))
+    return render_template('login.html', form=form, title='Вход')
+
+
+@bp.route('/logout', methods=['GET', 'POST'])
+def logout():
+    session['user_id'] = None
+    return redirect(url_for('main.index'))
+
+
+@bp.route('/edit', methods=['GET', 'POST'])
+@login_required
+def edit():
+    form = ProfileEditForm(obj=g.user)
+    if form.validate_on_submit():
+        form.populate_obj(g.user)
+        db.session.commit()
+        flash('Информация успешно обновлена', 'Успех')
+        return redirect(url_for('users.user', username=g.user.username))
+    return render_template('edit.html', form=form, title='Редактировать профиль')

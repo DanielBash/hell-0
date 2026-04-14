@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  {% for fieldname, errors in form.errors.items() %}
+    {% for error in errors %}
+<aside>
+<div class="card warn">
+ <p>{{ form[fieldname].label.text or fieldname }}</p>
+ <p>{{ error }}</p>
+</div>
+</aside>
+    {% endfor %}
+  {% endfor %}
+
+<h1>Регистрация в hell-0</h1>
+<p>Это страница регистрации, главная страница <a href="{{ url_for('main.index') }}">здесь</a>. Если у вас уже есть аккаунт, логин доступен
+<a href="{{ url_for('auth.login') }}">здесь</a>.</p>
+<form method="POST">
+      {{ form.hidden_tag() }}
+      <fieldset>
+          <legend>Register</legend>
+        <div class="row">
+          <div class="col">
+            {{ form.username.label }}
+            {{ form.username(size=32) }}
+            {{ form.password.label }}
+            {{ form.password(size=32) }}
+          </div>
+          <div class="col">
+            {{ form.email.label }}
+            {{ form.email(size=32) }}
+            {{ form.confirm_password.label }}
+            {{ form.confirm_password(size=32) }}
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset id="forms__action">
+        <legend>Отправка формы</legend>
+          {{ form.submit() }}
+      </fieldset>
+    </form>
+{% endblock %}
