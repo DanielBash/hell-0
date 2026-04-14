@@ -1,4 +1,4 @@
-name: auto-release
+name: auto-update
 
 on:
   push:
@@ -13,7 +13,7 @@ jobs:
   bump-and-release:
     runs-on: ubuntu-latest
     steps:
-      - name: Клонирование репозитория
+      - name: Клонирование репозитория (вся история и теги)
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -28,6 +28,7 @@ jobs:
         id: version
         env:
           COMMIT_MSG: ${{ github.event.head_commit.message }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           bump_type=""
           if [[ "$COMMIT_MSG" =~ ^\[PATCH\] ]]; then
@@ -73,11 +74,16 @@ jobs:
           new_version="v${major}.${minor}.${patch}"
           echo "Новая версия: $new_version"
 
-          git tag -a "$new_version" -m "Релиз $new_version"
-          git push origin "$new_version"
+          if git rev-parse "$new_version" >/dev/null 2>&1; then
+            echo "Тег $new_version уже существует. Пропускаем создание тега."
+          else
+            git tag -a "$new_version" -m "Релиз $new_version"
+            git push origin "$new_version"
+          fi
 
           release_body=$(echo "$COMMIT_MSG" | sed -E 's/^\[(PATCH|MINOR|MAJOR)\][[:space:]]*//')
 
+          # Создаём релиз через GitHub CLI
           gh release create "$new_version" \
             --title "$new_version" \
             --notes "$release_body" \
