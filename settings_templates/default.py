@@ -25,12 +25,10 @@ PERMISSION_GROUPS = {
     'admin': {
         'VIEW_ADMIN_PANEL': True,
         'SEND_MAIL_MESSAGES': True,
-        'PUBLUSH_POSTS': True,
     },
     'user': {
         'VIEW_ADMIN_PANEL': False,
-        'SEND_MAIL_MESSAGES': True,
-        'PUBLUSH_POSTS': True,
+        'SEND_MAIL_MESSAGES': False,
     }
 }
 
@@ -38,14 +36,14 @@ PERMISSION_GROUPS = {
 ADMIN_PASSWORD = 'password'
 ADMIN_USERNAME = 'admin'
 ADMIN_PERMISSION_GROUP = 'admin'
-ADMIN_EMAIL = 'hidden@example.com'
-ADMIN_BIO = 'Я админ этого сайта.'
-ADMIN_STATUS = 'Создаю нечто великолепное...'
+ADMIN_EMAIL = 'inbox@example.com'
+ADMIN_BIO = 'Я администратор и главный разработчик сайта.'
+ADMIN_STATUS = 'Модерирую новости. Слежу за жалобами.'
 
 # -- настройки пользователей по-умолчанию
 DEFAULT_PERMISSION_GROUP = 'user'
-DEFAULT_STATUS = 'Гик'
-DEFAULT_BIO = f'Я гик и буду гиковать.'
+DEFAULT_STATUS = 'Исследователь'
+DEFAULT_BIO = f'Я активно слежу за последними новостями'
 
 # -- front end estetics
 # - pagination

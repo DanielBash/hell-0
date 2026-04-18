@@ -3,14 +3,13 @@
 # -- импортирование модулей
 import datetime
 import logging
-import pprint
 import shutil
 from rich.console import Console
 from rich.traceback import install
-import flask.cli
+import friendly_traceback
 
 # -- настройки для более понятных отчетах
-install()
+friendly_traceback.install(lang="ru")
 
 # -- настройки вывода
 console = Console(force_terminal=True, color_system="truecolor", legacy_windows=False,
@@ -39,9 +38,8 @@ class RichMetaHandler(logging.Handler):
 def rich(msg):
     console.print(msg, markup=True)
 
-
 handler = RichMetaHandler()
-log = logging.getLogger("flagsweeper")
+log = logging.getLogger("news")
 log.setLevel(logging.DEBUG)
 log.addHandler(handler)
 log.propagate = False

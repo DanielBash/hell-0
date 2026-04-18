@@ -17,7 +17,7 @@ class RegistrationForm(FlaskForm):
         ]
     )
     email = StringField(
-        'Email',
+        'Почтовый ящик',
         validators=[
             DataRequired(),
             Email(message='Введите свою почту в формате <ящик>@<сервер>.')
@@ -56,6 +56,6 @@ class LoginForm(FlaskForm):
 
 
 class ProfileEditForm(FlaskForm):
-    bio = TextAreaField(label='Обо мне', validators=[DataRequired(), Length(max=5000, message='Bio must be shorter then 5k symbols.')])
-    status = StringField(label='Статус', validators=[DataRequired(), Length(min=5, max=30, message='Status must be at least 5 charecters and no more then 30.')])
+    bio = TextAreaField(label='Обо мне', validators=[DataRequired(), Length(max=5000, message='Не длинее 5000 символов.')])
+    status = StringField(label='Статус', validators=[DataRequired(), Length(min=5, max=30, message='Хотябы 5 и меньше 31')])
     submit = SubmitField('Применить')

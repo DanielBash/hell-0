@@ -1,11 +1,7 @@
 """ - Flask app initialization script"""
 
 from flask import Flask, g
-import settings
-from ..models import db, User
-import core
-import os
-import sys
+from ..models import db
 import settings
 from . import jinja_filters
 from . import after_initialization

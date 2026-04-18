@@ -5,8 +5,7 @@
 <h1>Hell-0, {{ target_user.username }}!</h1>
 
 {% if user.username == target_user.username %}
-<p>О, да это же ваш профиль! Хотите <a href="{{ url_for('auth.logout') }}">выйти</a>? Профиль доступен для редактирования <a href="{{ url_for('auth.edit') }}">на этой странице</a>.
-Возможно вы хотите посмотреть <a href="{{ url_for('messages.filter') }}">ящик системных уведомлений</a>?</p>
+<p>О, да это же ваш профиль! Хотите <a href="{{ url_for('auth.logout') }}">выйти</a>? Профиль доступен для редактирования <a href="{{ url_for('auth.edit') }}">на этой странице</a></p>
 {% else %}
 <p>Пожалуйста, будьте вежливы с данным пользователем.</p>
 {% endif%}
@@ -38,5 +37,4 @@
 </table>
 </figure>
 <p>Обо мне: {{target_user.bio | safe}}</p>
-Мои посту доступны <a href="{{ url_for('posts.posts', username=target_user.username) }}">по ссылке</a>!
 {% endblock %}

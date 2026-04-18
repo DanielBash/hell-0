@@ -10,7 +10,7 @@ from core.logger import log
 
 
 def main():
-    log.info('Создвние админ-пользователя.')
+    log.info('Создание админ-пользователя.')
     create_admin_user()
 
 
