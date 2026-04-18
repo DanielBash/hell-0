@@ -10,5 +10,4 @@ bp = Blueprint('main', __name__)
 
 @bp.route('/', methods=['GET'])
 def index():
-    print(fucking_fail)
     return redirect(url_for('auth.login'))
