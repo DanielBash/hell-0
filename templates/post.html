@@ -1,8 +1,0 @@
-{% extends "base.html" %}
-
-{% block content %}
-<h1>Название: {{post.subject | safe}}</h1>
-<p>Пост опубликован <a href="{{url_for('posts.posts', username=target_user.username)}}">{{target_user.username}}</a></p>
-
-<p>{{post.content | safe}}</p>
-{% endblock %}

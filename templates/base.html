@@ -1,50 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>{% block title %}{{title or "Page title"}}{% endblock %}</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="{{ url_for('static', filename='css/tabs.css') }}" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/classless.css') }}">
-  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    <meta charset="UTF-8">
+    <title>{% block title %}{{title or "Page title"}}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ url_for('static', filename='css/tabs.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/classless.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
 </head>
 <body>
 {% block header %}
 <nav>
 
-      <ul>
+    <ul>
         <li>hell-0</li>
         <li class="float-right">
-          {% if user %}
-          <a href="{{ url_for('users.user', username=user.username) }}">{{user.username}}</a>
-          {% else %}
-          <a href="{{ url_for('auth.login') }}">Войти</a>
-          {% endif %}
+            {% if user %}
+            <a href="{{ url_for('users.user', username=user.username) }}">Аккаунт</a>
+            {% else %}
+            <a href="{{ url_for('auth.login') }}">Авторизация</a>
+            {% endif %}
         </li>
-      </ul>
+        <li class="float-right">
+            <a href="{{ url_for('docs.index') }}">О проекте</a>
+        </li>
+        <li class="float-right">
+            <a href="{{ url_for('mail.index') }}">Рассылки</a>
+        </li>
+        <li class="float-right">
+            <a href="{{ url_for('news.index') }}">Новости</a>
+        </li>
+        <li class="float-right">
+            <a href="{{ url_for('api.index') }}">Разработчикам</a>
+        </li>
+    </ul>
 
 </nav>
 {% endblock %}
 
 {% block warnings %}
 {% with messages = get_flashed_messages(with_categories=true) %}
- {% for category, message in messages %}
- {% if category == 'Warning' %}
+{% for category, message in messages %}
+{% if category == 'Warning' %}
 <aside>
-<div class="card warn">
- <p>{{category}}</p>
- <p>{{message}}</p>
-</div>
+    <div class="card warn">
+        <p>{{category}}</p>
+        <p>{{message}}</p>
+    </div>
 </aside>
 {% else %}
 <aside>
-<div class="card info">
- <p>{{category}}</p>
- <p>{{message}}</p>
-</div>
+    <div class="card info">
+        <p>{{category}}</p>
+        <p>{{message}}</p>
+    </div>
 </aside>
 {% endif %}
- {% endfor %}
+{% endfor %}
 {% endwith %}
 {% endblock %}
 
