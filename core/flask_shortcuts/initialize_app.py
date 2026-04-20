@@ -6,18 +6,15 @@ import settings
 from . import jinja_filters
 from . import after_initialization
 from ..logger import log
-from flask_migrate import Migrate, upgrade
 
 
 # - инициализация приложения
 def create_app(name) -> Flask:
     app = Flask(name)
-    migrate = Migrate()
 
     app.config.from_object(settings.FLASK_SETTINGS)
 
     db.init_app(app)
-    migrate.init_app(app, db)
 
     log.info('Инициализация шаблонов')
     with app.app_context():
@@ -29,7 +26,7 @@ def create_app(name) -> Flask:
             else:
                 app.register_blueprint(blueprints[bp])
 
-        upgrade()
+        db.create_all()
 
         after_initialization.main()
 
