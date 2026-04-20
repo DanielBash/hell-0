@@ -23,6 +23,10 @@ class User(db.Model):
     username = db.Column(db.String(32), nullable=False, unique=True, index=True)
     bio = db.Column(db.String(5000), nullable=False, default='')
     status = db.Column(db.String(30), nullable=False, default='')
+    last_visit = db.Column(
+        db.DateTime,
+        server_default=db.func.now()
+    )
     registered_at = db.Column(
         db.DateTime,
         server_default=db.func.now()
