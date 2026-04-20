@@ -35,3 +35,33 @@ class User(db.Model):
             return None
         else:
             return permissions[name]
+
+
+# -- таблица новостей-постов
+class Post(db.Model):
+    __tablename__ = "posts"
+
+    # скрытая информация
+    id = db.Column(db.Integer, primary_key=True)
+
+    # публичная информация
+    category = db.Column(db.String(50), nullable=False)
+    data = db.Column(db.Text, nullable=False)
+    created_at = db.Column(
+        db.DateTime,
+        server_default=db.func.now()
+    )
+
+
+# -- таблица комментариев к постам
+class PostComment(db.Model):
+    __tablename__ = "post_comments"
+
+    id = db.Column(db.Integer, primary_key=True)
+    post_id = db.Column(db.Integer, db.ForeignKey("posts.id"), nullable=False)
+    post = db.relationship("Post", backref=db.backref("comments", lazy="dynamic"))
+    body = db.Column(db.Text, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    user = db.relationship("User", backref="comments")
+
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
