@@ -23,7 +23,7 @@ cd profile
 pip install -r requirements.txt
 ```
 
-3) По необходимости поменяйте настройки в файле .env
+3) По необходимости поменяйте настройки в файле .env <br/>
 ```bash
 touch .env
 echo "SECRET_KEY=secure-secret-key" > .env
