@@ -12,6 +12,7 @@ friendly==0.7.21
 friendly-styles==0.2
 friendly-traceback==0.7.61
 greenlet==3.4.0
+gunicorn==25.3.0
 iniconfig==2.3.0
 itsdangerous==2.2.0
 Jinja2==3.1.6
