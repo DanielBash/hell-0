@@ -8,8 +8,9 @@ timeout = 30
 keepalive = 2
 spew = False
 
-accesslog = "/var/log/gunicorn/access.log"
-errorlog = "/var/log/gunicorn/error.log"
+accesslog = "-"
+errorlog = "-"
+
 loglevel = "info"
 
 proc_name = "hell_0_gunicorn"
