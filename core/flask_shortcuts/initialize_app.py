@@ -6,15 +6,17 @@ import settings
 from . import jinja_filters
 from . import after_initialization
 from ..logger import log
+from flask_migrate import Migrate
 
 
 # - инициализация приложения
 def create_app(name) -> Flask:
     app = Flask(name)
-
+    migrate = Migrate()
     app.config.from_object(settings.FLASK_SETTINGS)
 
     db.init_app(app)
+    migrate.init_app(app, db)
 
     log.info('Инициализация шаблонов')
     with app.app_context():
@@ -25,10 +27,6 @@ def create_app(name) -> Flask:
                 app.register_blueprint(blueprints[bp], url_prefix=f'/{bp}')
             else:
                 app.register_blueprint(blueprints[bp])
-
-        db.create_all()
-
-        after_initialization.main()
 
     for key, val in jinja_filters.jinja_filters.items():
         app.jinja_env.filters[key] = val
