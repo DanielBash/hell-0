@@ -2,10 +2,10 @@
 
 bind = "0.0.0.0:8080"
 workers = 1
-worker_class = "eventlet"
+worker_class = "gevent"
 worker_connections = 1000
 timeout = 30
-keepalive = 2
+keepalive = 5
 spew = False
 
 accesslog = "-"

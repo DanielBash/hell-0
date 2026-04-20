@@ -28,6 +28,8 @@ def create_app(name) -> Flask:
             else:
                 app.register_blueprint(blueprints[bp])
 
+        after_initialization.main()
+
     for key, val in jinja_filters.jinja_filters.items():
         app.jinja_env.filters[key] = val
 

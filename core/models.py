@@ -65,6 +65,7 @@ class PostComment(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey("posts.id"), nullable=False)
     post = db.relationship("Post", backref=db.backref("comments", lazy="dynamic"))
     body = db.Column(db.Text, nullable=False)
+    title = db.Column(db.String(100), nullable=False, default='')
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     user = db.relationship("User", backref="comments")
 
