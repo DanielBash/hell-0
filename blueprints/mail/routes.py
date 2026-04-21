@@ -13,4 +13,4 @@ bp = Blueprint('mail', __name__)
 @bp.route('/', methods=['GET'])
 @login_required
 def index():
-    return render_template('mail_all.html')
+    return render_template('mail_all.html', title='Рассылки')

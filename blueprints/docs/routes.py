@@ -10,4 +10,4 @@ bp = Blueprint('docs', __name__)
 
 @bp.route('/', methods=['GET'])
 def index():
-    return render_template('docs.html')
+    return render_template('docs.html', title='О проекте')

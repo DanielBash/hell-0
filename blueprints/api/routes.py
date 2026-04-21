@@ -10,4 +10,4 @@ bp = Blueprint('api', __name__)
 
 @bp.route('/', methods=['GET'])
 def index():
-    return render_template('api.html')
+    return render_template('api.html', title='Апи')
