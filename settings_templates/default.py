@@ -7,7 +7,7 @@ from secrets import token_hex
 # -- настройки Flask
 PORT = 8080  # порт
 HOST = '0.0.0.0'  # хост
-SECRET_KEY = token_hex(128)  # секретный криптографический ключ
+SECRET_KEY = token_hex(128)  # секретный криптографический ключ; для production задайте SECRET_KEY в .env
 
 # -- настройки приложения
 DEBUG = False  # режим отладки
@@ -33,7 +33,7 @@ PERMISSION_GROUPS = {
 }
 
 # -- данные пользователя админ
-ADMIN_PASSWORD = 'password'
+ADMIN_PASSWORD = 'CHANGE_ME'  # Change this via environment variable ADMIN_PASSWORD
 ADMIN_USERNAME = 'admin'
 ADMIN_PERMISSION_GROUP = 'admin'
 ADMIN_EMAIL = 'inbox@example.com'

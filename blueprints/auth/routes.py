@@ -34,9 +34,10 @@ def register():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        if check_credentials(form.data['username'], form.data['password']):
+        user = check_credentials(form.data['username'], form.data['password'])
+        if user:
             flash('Вы успешно зашли!', 'Успех')
-            session['user_id'] = User.query.filter_by(username=form.data['username']).first().id
+            session['user_id'] = user.id
             return redirect(url_for('main.index'))
         else:
             flash('Неверные данные пользователя!', 'Warning')
@@ -46,7 +47,7 @@ def login():
 
 @bp.route('/logout', methods=['GET', 'POST'])
 def logout():
-    session['user_id'] = None
+    session.pop('user_id', None)
     return redirect(url_for('main.index'))
 
 

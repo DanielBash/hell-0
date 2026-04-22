@@ -48,8 +48,7 @@ def check_credentials(username, password):
 
     user = User.query.filter_by(username=username).first()
     if user is None:
-        return False
+        return None
     if check_password_hash(user.password, password):
-        return True
-
-    return False
+        return user
+    return None
