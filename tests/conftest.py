@@ -12,7 +12,7 @@ import main
 @pytest.fixture()
 def app():
     app = main.app
-    app.config.update({"TESTING": True})
+    app.config.update({"TESTING": True, "WTF_CSRF_ENABLED": False})
     yield app
 
 

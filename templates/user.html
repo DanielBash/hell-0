@@ -4,7 +4,7 @@
 
 <h1>Hell-0, {{ target_user.username }}!</h1>
 
-{% if user.username == target_user.username %}
+{% if user and user.username == target_user.username %}
 <p>О, да это же ваш профиль! Хотите <a href="{{ url_for('auth.logout') }}">выйти</a>? Профиль доступен для редактирования <a href="{{ url_for('auth.edit') }}">на этой странице</a></p>
 {% else %}
 <p>Пожалуйста, будьте вежливы с данным пользователем.</p>
@@ -26,7 +26,7 @@
 
     <tr>
       <td>Статус</td>
-      <td>{{target_user.status | safe}}</td>
+      <td>{{target_user.status}}</td>
     </tr>
 
     <tr>
@@ -36,5 +36,5 @@
  </tbody>
 </table>
 </figure>
-<p>Обо мне: {{target_user.bio | safe}}</p>
+<p>Обо мне: {{target_user.bio}}</p>
 {% endblock %}

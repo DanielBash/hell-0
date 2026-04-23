@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import settings
 from core.logger import log
 from .models import PostReaction, Post, PostComment, db
+from sqlalchemy.exc import IntegrityError
 
 
 def create_app(name):
@@ -49,13 +50,10 @@ def check_credentials(username, password):
 
     user = User.query.filter_by(username=username).first()
     if user is None:
-        return False
+        return None
     if check_password_hash(user.password, password):
-        return True
-
-    return False
-
-from sqlalchemy.exc import IntegrityError
+        return user
+    return None
 
 def set_reaction(user_id, post_id, reaction_type):
     reaction = PostReaction(

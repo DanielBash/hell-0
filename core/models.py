@@ -33,8 +33,9 @@ class User(db.Model):
     )
 
     def get_permission(self, name):
-        permissions = settings.PERMISSION_GROUPS[self.permission_group]
-
+        permissions = settings.PERMISSION_GROUPS.get(self.permission_group)
+        if permissions is None:
+            return None
         if name not in permissions:
             return None
         else:
