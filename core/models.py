@@ -70,3 +70,33 @@ class PostComment(db.Model):
     user = db.relationship("User", backref="comments")
 
     created_at = db.Column(db.DateTime, server_default=db.func.now())
+
+
+# -- таблица реакция
+class PostReaction(db.Model):
+    __tablename__ = "post_reactions"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey("posts.id"), nullable=False)
+
+    reaction_type = db.Column(db.String(20), nullable=False)
+
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+
+    user = db.relationship("User", backref="reactions")
+    post = db.relationship("Post", backref=db.backref("reactions", lazy="dynamic"))
+
+    __table_args__ = (
+        db.UniqueConstraint("user_id", "post_id", name="uq_user_post_reaction"),
+    )
+
+    def reaction_count(self, reaction_type=None):
+        q = self.reactions
+        if reaction_type:
+            q = q.filter_by(reaction_type=reaction_type)
+        return q.count()
+
+    def user_reaction(self, user_id):
+        return self.reactions.filter_by(user_id=user_id).first()
