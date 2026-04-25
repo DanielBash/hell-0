@@ -1,7 +1,8 @@
 """Функции до обработки запроса"""
+import datetime
 
 from flask import g, session, current_app
-from ..models import User
+from ..models import User, db
 
 
 @current_app.before_request
@@ -12,3 +13,5 @@ def load_logged_in_user():
         g.user = None
     else:
         g.user = User.query.get(user_id)
+        g.user.last_visit = datetime.datetime.utcnow()
+        db.session.commit()

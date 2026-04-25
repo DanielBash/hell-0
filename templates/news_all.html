@@ -2,7 +2,14 @@
 
 {% block content %}
 <h1>Доступные каналы:</h1>
+{% if categories %}
 {% for i in categories %}
 <a href="{{url_for('news.category', category=i[1])}}">{{i[0]}}</a>
+{% if i[2] > 0 %}
+Непрочитано: {{i[2]}}
+{% endif %}
 {% endfor %}
+{% else %}
+Нет доступных каналов.
+{% endif %}
 {% endblock %}

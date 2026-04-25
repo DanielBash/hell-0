@@ -31,7 +31,12 @@
 
     <tr>
       <td>Зарегестрирован</td>
-      <td>{{target_user.registered_at}}</td>
+      <td>{{target_user.registered_at|relative_time}}</td>
+    </tr>
+
+    <tr>
+      <td>Последний раз онлайн</td>
+      <td>{{target_user.last_visit|relative_time}}</td>
     </tr>
  </tbody>
 </table>

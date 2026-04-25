@@ -8,8 +8,6 @@ from . import after_initialization
 from ..logger import log
 from flask_migrate import Migrate
 from flask import Flask
-from apscheduler.schedulers.background import BackgroundScheduler
-import atexit
 
 
 # - инициализация приложения
@@ -31,7 +29,8 @@ def create_app(name) -> Flask:
             else:
                 app.register_blueprint(blueprints[bp])
 
-        after_initialization.main()
+        if not settings.SKIP_DB_INIT:
+            after_initialization.main()
 
     for key, val in jinja_filters.jinja_filters.items():
         app.jinja_env.filters[key] = val

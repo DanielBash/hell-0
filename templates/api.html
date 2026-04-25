@@ -1,5 +1,48 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Тут будет экскурс в api!</h1>
+<main>
+        <h2>Общее</h2>
+        <p>API предоставляет доступ к данным пользователей и постов в формате JSON.</p>
+
+        <h2>Эндпоинты</h2>
+
+        <article>
+            <h3>Получение пользователя</h3>
+            <p><strong>URL:</strong> <code>/user/&lt;user_id&gt;</code></p>
+            <p><strong>Методы:</strong> GET, POST</p>
+
+            <h4>Пример запроса</h4>
+            <pre><code>GET /user/1</code></pre>
+
+            <h4>Ответ</h4>
+            <pre><code>{
+  "id": 1,
+  "username": "john",
+  "bio": "...",
+  "status": "active",
+  "last_visit": "...",
+  "registered_at": "..."
+}</code></pre>
+        </article>
+
+        <article>
+            <h3>Получение поста</h3>
+            <p><strong>URL:</strong> <code>/post/&lt;post_id&gt;</code></p>
+            <p><strong>Методы:</strong> GET, POST</p>
+
+            <h4>Пример запроса</h4>
+            <pre><code>GET /post/1</code></pre>
+
+            <h4>Ответ</h4>
+            <pre><code>{
+  "id": 1,
+  "category": "news",
+  "data": "...",
+  "created_at": "..."
+}</code></pre>
+        </article>
+        <h2>Ошибки</h2>
+        <p>Если объект не найден, возвращается ошибка <code>404 Not Found</code>.</p>
+</main>
 {% endblock %}

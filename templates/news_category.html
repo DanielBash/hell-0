@@ -2,7 +2,22 @@
 
 {% block content %}
 <h1>Последние посты:</h1>
+
 {% for i in posts %}
-<p>{{i.data}}</p>
+<div>
+    <p>{{ i.data | markdown }} Время публикации: {{ i.created_at|relative_time }}</p>
+     <a href="{{url_for('news.comments', post_id=i.id)}}">Посмотреть комментарии</a>
+    <div>
+        {% for key, emoji in reactions.items() %}
+            <form action="{{ url_for('news.react', post_id=i.id) }}" method="POST" style="display:inline;">
+                <input type="hidden" name="reaction" value="{{ key }}">
+                <button style="{% if user_reaction and user_reaction.reaction_type == key %}font-weight:bold;{% endif %}">
+                    {{ emoji }} {{ i.reaction_count(key) }}
+                </button>
+            </form>
+        {% endfor %}
+    </div>
+</div>
 {% endfor %}
+
 {% endblock %}

@@ -4,7 +4,7 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 import settings
 from core.logger import log
-from .models import PostReaction, Post, PostComment, db
+from .models import PostReaction, Post, PostComment, db, PostCommentReaction
 from sqlalchemy.exc import IntegrityError
 
 
@@ -74,8 +74,32 @@ def set_reaction(user_id, post_id, reaction_type):
             existing.reaction_type = reaction_type
             db.session.commit()
 
+def set_reaction_comment(user_id, post_id, reaction_type):
+    reaction = PostCommentReaction(
+        user_id=user_id,
+        comment_id=post_id,
+        reaction_type=reaction_type,
+    )
+    try:
+        db.session.add(reaction)
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        existing = PostCommentReaction.query.filter_by(
+            user_id=user_id,
+            comment_id=post_id,
+        ).first()
+        if existing:
+            existing.reaction_type = reaction_type
+            db.session.commit()
+
 def post_add(category, data):
     new_post = Post(category=category, data=data)
+    db.session.add(new_post)
+    db.session.commit()
+
+def post_comment_add(body, user_id, post_id):
+    new_post = PostComment(post_id=post_id, user_id=user_id, body=body)
     db.session.add(new_post)
     db.session.commit()
 

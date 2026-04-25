@@ -7,6 +7,8 @@
     <link href="{{ url_for('static', filename='css/tabs.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/classless.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    <script src="https://unpkg.com/emoji-mart@latest/dist/browser.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/emoji-mart@latest/dist/browser.css">
 </head>
 <body>
 {% block header %}
@@ -46,7 +48,7 @@
 {% block warnings %}
 {% with messages = get_flashed_messages(with_categories=true) %}
 {% for category, message in messages %}
-{% if category == 'Warning' %}
+{% if category == 'Ошибка' %}
 <aside>
     <div class="card warn">
         <p>Сообщение</p>
