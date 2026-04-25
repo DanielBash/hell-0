@@ -1,5 +1,41 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Тут будут рассылки!</h1>
+<h1>Рассылки</h1>
+
+<form method="POST">
+    {{ form.hidden_tag() }}
+
+    <fieldset>
+        <legend>Расписание</legend>
+        {{ form.is_active.label }} {{ form.is_active() }}<br><br>
+        {{ form.send_hour.label }}: {{ form.send_hour() }}<br><br>
+        <label>Дни отправки:</label>
+        {% for subfield in form.send_days %}
+            {{ subfield() }} {{ subfield.label }}
+        {% endfor %}
+    </fieldset>
+
+    <fieldset>
+        <legend>Блоки категорий</legend>
+        {% for key, cat in categories.items() %}
+        <div>
+            <input type="checkbox" name="categories" value="{{ key }}"
+                {% if key in selected_cats %}checked{% endif %}>
+            <label>{{ cat.readable }}</label>
+            &nbsp; Постов:
+            <select name="count_{{ key }}">
+                {% for n in [2, 3] %}
+                <option value="{{ n }}" {% if selected_cats.get(key, 2) == n %}selected{% endif %}>{{ n }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {% endfor %}
+    </fieldset>
+
+    <fieldset>
+        <legend>Сохранить</legend>
+        {{ form.submit() }}
+    </fieldset>
+</form>
 {% endblock %}

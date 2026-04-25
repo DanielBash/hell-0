@@ -19,4 +19,13 @@
           {{ form.submit() }}
       </fieldset>
     </form>
+
+<form method="POST" action="{{ url_for('admin.update_handlers') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <fieldset>
+        <legend>Обновление новостей</legend>
+        <button type="submit">Запустить обновление новостей</button>
+    </fieldset>
+</form>
+
 {% endblock %}

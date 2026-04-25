@@ -105,4 +105,5 @@ def post_comment_add(body, user_id, post_id):
 
 
 def posts_handler():
-    pass  # TODO: Make handler work.
+    from core.handlers import run_all
+    run_all()

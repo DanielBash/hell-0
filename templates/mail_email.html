@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Новостная рассылка hell-0</title>
+<style>
+  body { font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; }
+  h1 { border-bottom: 2px solid #333; }
+  h2 { color: #333; margin-top: 30px; }
+  .post { border-left: 3px solid #666; padding-left: 15px; margin: 15px 0; }
+  .post h3 { margin: 0 0 5px; }
+  .post p { margin: 5px 0; color: #555; }
+  .post a { color: #0066cc; }
+  .footer { margin-top: 40px; font-size: 12px; color: #999; border-top: 1px solid #ddd; padding-top: 10px; }
+</style>
+</head>
+<body>
+<h1>Новости за {{ now }}</h1>
+
+{% for block in blocks %}
+<h2>{{ block.title }}</h2>
+{% for post in block.posts %}
+<div class="post">
+  <h3>{{ post.headline }}</h3>
+  <p>{{ post.summary }}</p>
+  {% if post.link %}<a href="{{ post.link }}">Читать далее</a>{% endif %}
+</div>
+{% endfor %}
+{% if not block.posts %}<p><em>Нет новых публикаций</em></p>{% endif %}
+{% endfor %}
+
+<div class="footer">
+  Вы получили это письмо, потому что подписаны на рассылку hell-0.<br>
+  Настроить рассылку можно в <a href="/mail/">личном кабинете</a>.
+</div>
+</body>
+</html>

@@ -134,3 +134,24 @@ class PostCommentReaction(db.Model, SerializerMixin):
     __table_args__ = (
         db.UniqueConstraint("user_id", "comment_id", name="uq_user_comment_reaction"),
     )
+
+
+class MailSubscription(db.Model, SerializerMixin):
+    __tablename__ = 'mail_subscriptions'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, unique=True)
+    user = db.relationship('User', backref=db.backref('mail_subscription', uselist=False))
+    send_days = db.Column(db.String(20), nullable=False, default='0,1,2,3,4,5,6')
+    send_hour = db.Column(db.Integer, nullable=False, default=8)
+    is_active = db.Column(db.Boolean, nullable=False, default=True)
+    blocks = db.relationship('MailBlock', backref='subscription', cascade='all, delete-orphan')
+
+
+class MailBlock(db.Model, SerializerMixin):
+    __tablename__ = 'mail_blocks'
+
+    id = db.Column(db.Integer, primary_key=True)
+    subscription_id = db.Column(db.Integer, db.ForeignKey('mail_subscriptions.id'), nullable=False)
+    category = db.Column(db.String(50), nullable=False)
+    post_count = db.Column(db.Integer, nullable=False, default=2)

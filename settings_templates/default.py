@@ -55,6 +55,12 @@ POST_CATEGORIES = {
     },
 }
 
+MAIL_SERVER = ''
+MAIL_PORT = 2525
+MAIL_USERNAME = ''
+MAIL_PASSWORD = ''
+MAIL_FROM = ''
+
 POST_REACTIONS = {
     "like": "👍",
     "love": "❤️",
