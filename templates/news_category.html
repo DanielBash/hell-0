@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Последние посты:</h1>
+{% for i in posts %}
+<p>{{i.data}}</p>
+{% endfor %}
+{% endblock %}

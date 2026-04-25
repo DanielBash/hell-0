@@ -73,3 +73,12 @@ def set_reaction(user_id, post_id, reaction_type):
         if existing:
             existing.reaction_type = reaction_type
             db.session.commit()
+
+def post_add(category, data):
+    new_post = Post(category=category, data=data)
+    db.session.add(new_post)
+    db.session.commit()
+
+
+def posts_handler():
+    pass  # TODO: Make handler work.

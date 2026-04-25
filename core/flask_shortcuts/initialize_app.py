@@ -7,6 +7,9 @@ from . import jinja_filters
 from . import after_initialization
 from ..logger import log
 from flask_migrate import Migrate
+from flask import Flask
+from apscheduler.schedulers.background import BackgroundScheduler
+import atexit
 
 
 # - инициализация приложения

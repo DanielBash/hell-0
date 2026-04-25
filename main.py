@@ -14,4 +14,4 @@ log.info('Приложение создано')
 if __name__ == '__main__':
     with app.app_context():
         pass
-    app.run(settings.HOST, port=settings.PORT, debug=True)
+    app.run(settings.HOST, port=settings.PORT, debug=True, use_reloader=False)

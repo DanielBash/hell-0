@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Тут будут каналы с последними новостями!</h1>
+<h1>Доступные каналы:</h1>
+{% for i in categories %}
+<a href="{{url_for('news.category', category=i[1])}}">{{i[0]}}</a>
+{% endfor %}
 {% endblock %}

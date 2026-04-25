@@ -38,7 +38,7 @@ class FlaskSettings:
 FLASK_SETTINGS = FlaskSettings()
 
 # -- вывод настроек, после инициализации приложения
-if PRINT_CONSTANTS and os.environ.get("WERKZEUG_RUN_MAIN") == "true":
+if PRINT_CONSTANTS:
     log.info('Настройки загружены, вот они:')
     for i in dir(module):
         if i.isupper():

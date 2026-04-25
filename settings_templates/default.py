@@ -24,16 +24,14 @@ BASE_BLUEPRINTS = ['main', 'index']  # шаблоны которые будут 
 PERMISSION_GROUPS = {
     'admin': {
         'VIEW_ADMIN_PANEL': True,
-        'SEND_MAIL_MESSAGES': True,
     },
     'user': {
         'VIEW_ADMIN_PANEL': False,
-        'SEND_MAIL_MESSAGES': False,
     }
 }
 
 # -- данные пользователя админ
-ADMIN_PASSWORD = 'CHANGE_ME'  # Change this via environment variable ADMIN_PASSWORD
+ADMIN_PASSWORD = 'password'
 ADMIN_USERNAME = 'admin'
 ADMIN_PERMISSION_GROUP = 'admin'
 ADMIN_EMAIL = 'inbox@example.com'
@@ -45,7 +43,13 @@ DEFAULT_PERMISSION_GROUP = 'user'
 DEFAULT_STATUS = 'Исследователь'
 DEFAULT_BIO = f'Я активно слежу за последними новостями'
 
-# -- front end estetics
-# - pagination
-MESSAGES_PAGINATION = 20
-POSTS_PAGINATION = 10
+POST_CATEGORIES = {
+    'bbc': {
+        'readable': "Новости BBC",
+        'handler': 'posts_bbc'
+    },
+    'system': {
+        'readable': "Обновления hell-0",
+        'handler': 'posts_hell-0'
+    },
+}

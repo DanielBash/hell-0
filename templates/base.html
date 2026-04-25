@@ -33,6 +33,11 @@
         <li class="float-right">
             <a href="{{ url_for('api.index') }}">Разработчикам</a>
         </li>
+        {% if user and user.get_permission('VIEW_ADMIN_PANEL') %}
+        <li class="float-right">
+            <a href="{{ url_for('admin.index') }}">Админ-Панель</a>
+        </li>
+        {% endif %}
     </ul>
 
 </nav>
@@ -44,7 +49,7 @@
 {% if category == 'Warning' %}
 <aside>
     <div class="card warn">
-        <p>{{category}}</p>
+        <p>Сообщение</p>
         <p>{{message}}</p>
     </div>
 </aside>

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Привет, {{user.username}}!</h1>
+
+<form method="POST">
+      {{ form.hidden_tag() }}
+      <fieldset>
+          <legend>Отправить системное сообщение</legend>
+            {{ form.category.label }}
+            {{ form.category(height=50) }}
+            {{ form.text.label }}
+            {{ form.text(size=32) }}
+      </fieldset>
+
+      <fieldset id="forms__action">
+        <legend>Отправка формы</legend>
+          {{ form.submit() }}
+      </fieldset>
+    </form>
+{% endblock %}
