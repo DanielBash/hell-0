@@ -9,3 +9,7 @@ class SystemMessageForm(FlaskForm):
     text = TextAreaField(label='Сообщение')
     category = SelectField(label='Категория', choices=system_choices)
     submit = SubmitField('Отправить')
+
+
+class ActionForm(FlaskForm):
+    submit = SubmitField()

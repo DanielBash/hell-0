@@ -5,26 +5,33 @@
 <h1>Привет, {{user.username}}!</h1>
 
 <form method="POST">
-      {{ form.hidden_tag() }}
-      <fieldset>
-          <legend>Отправить системное сообщение</legend>
-            {{ form.category.label }}
-            {{ form.category(height=50) }}
-            {{ form.text.label }}
-            {{ form.text(size=32) }}
-      </fieldset>
-
-      <fieldset id="forms__action">
+    {{ form.hidden_tag() }}
+    <fieldset>
+        <legend>Отправить системное сообщение</legend>
+        {{ form.category.label }}
+        {{ form.category(height=50) }}
+        {{ form.text.label }}
+        {{ form.text(size=32) }}
+    </fieldset>
+    <fieldset>
         <legend>Отправка формы</legend>
-          {{ form.submit() }}
-      </fieldset>
-    </form>
+        {{ form.submit() }}
+    </fieldset>
+</form>
 
 <form method="POST" action="{{ url_for('admin.update_handlers') }}">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    {{ handlers_form.hidden_tag() }}
     <fieldset>
         <legend>Обновление новостей</legend>
         <button type="submit">Запустить обновление новостей</button>
+    </fieldset>
+</form>
+
+<form method="POST" action="{{ url_for('admin.send_emails') }}">
+    {{ mail_form.hidden_tag() }}
+    <fieldset>
+        <legend>Рассылка</legend>
+        <button type="submit">Отправить рассылки сейчас</button>
     </fieldset>
 </form>
 

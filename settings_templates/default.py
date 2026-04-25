@@ -49,6 +49,22 @@ POST_CATEGORIES = {
         'readable': "Новости BBC",
         'handler': 'posts_bbc'
     },
+    'tass': {
+        'readable': "ТАСС",
+        'handler': 'posts_tass'
+    },
+    'lenta': {
+        'readable': "Лента.ру",
+        'handler': 'posts_lenta'
+    },
+    'rbc': {
+        'readable': "РБК",
+        'handler': 'posts_rbc'
+    },
+    'kommersant': {
+        'readable': "Коммерсантъ",
+        'handler': 'posts_kommersant'
+    },
     'system': {
         'readable': "Обновления hell-0",
         'handler': 'posts_hell-0'
