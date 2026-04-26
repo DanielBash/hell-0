@@ -5,7 +5,7 @@ import settings
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask import current_app
 from .. import models
-from core.core import create_admin_user
+from core.core import create_admin_user, send_emails
 from core.logger import log
 from flask_migrate import upgrade, stamp
 from filelock import FileLock
@@ -25,7 +25,8 @@ def main():
 
         log.info("Планировка обновления новостей...")
         scheduler = BackgroundScheduler()
-        scheduler.add_job(func=posts_handler, trigger="interval", hours=1)
+        scheduler.add_job(func=posts_handler, trigger="interval", hours=0.1)
+        scheduler.add_job(func=send_emails, trigger="interval", hours=0.1)
         scheduler.start()
 
 

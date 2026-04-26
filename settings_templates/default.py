@@ -44,20 +44,15 @@ DEFAULT_PERMISSION_GROUP = 'user'
 DEFAULT_STATUS = 'Исследователь'
 DEFAULT_BIO = f'Я активно слежу за последними новостями'
 
-POST_CATEGORIES = {
-    'bbc': {
-        'readable': "Новости BBC",
-        'handler': 'posts_bbc'
-    },
-    'system': {
-        'readable': "Обновления hell-0",
-        'handler': 'posts_hell-0'
-    },
-}
-
 POST_REACTIONS = {
     "like": "👍",
     "love": "❤️",
     "laugh": "😂",
     "wow": "😮"
 }
+
+POST_CATEGORIES = {}
+
+NEWSLETTER_EMAIL_PASSWORD='password'
+NEWSLETTER_EMAIL_SERVER='smtp.example.com'
+NEWSLETTER_EMAIL_INBOX='inbox@example.com'

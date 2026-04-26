@@ -1,5 +1,186 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Тут будут рассылки!</h1>
+<h1>Настройки рассылки</h1>
+
+<p>Выберите, когда и какие письма вы хотите получать.</p>
+
+<h2>Расписание</h2>
+
+<div id="hours-wrap">
+  <p><strong>Часы (UTC)</strong></p>
+  <div id="hours-list"></div>
+  <button type="button" id="add-hour">Добавить час</button>
+</div>
+
+<div style="margin-top: 1rem;">
+  <p><strong>Дни недели</strong></p>
+  <div id="days-list"></div>
+</div>
+
+<h2 style="margin-top: 1.5rem;">Категории</h2>
+<div id="blocks-list"></div>
+<button type="button" id="add-block">Добавить категорию</button>
+
+<div style="margin-top: 1.5rem;">
+  <button type="button" id="update-btn">Сохранить</button>
+  <span id="status"></span>
+</div>
+
+<template id="block-template">
+  <div style="margin: 0.75rem 0;">
+    <select class="block-category"></select>
+    <label>
+      макс. постов
+      <input class="block-max" type="number" min="1" value="3">
+    </label>
+    <button type="button" class="remove-block">Удалить</button>
+  </div>
+</template>
+
+<script>
+const categories = {{ categories|tojson }};
+
+const hoursList = document.getElementById('hours-list');
+const daysList = document.getElementById('days-list');
+const blocksList = document.getElementById('blocks-list');
+const statusEl = document.getElementById('status');
+
+const DAY_NAMES = {
+  1: 'Понедельник',
+  2: 'Вторник',
+  3: 'Среда',
+  4: 'Четверг',
+  5: 'Пятница',
+  6: 'Суббота',
+  7: 'Воскресенье'
+};
+
+function makeHourRow(value = 7) {
+  const row = document.createElement('div');
+  row.innerHTML = `
+    <input type="number" min="0" max="23" value="${value}" class="hour-input">
+    <button type="button" class="remove-hour">Удалить</button>
+  `;
+  row.querySelector('.remove-hour').onclick = () => {
+    row.remove();
+    if (!hoursList.children.length) addHour();
+  };
+  return row;
+}
+
+function addHour(value = 7) {
+  hoursList.appendChild(makeHourRow(value));
+}
+
+function renderDays(selected = [1,2,3,4,5,6,7]) {
+  daysList.innerHTML = '';
+  for (let d = 1; d <= 7; d++) {
+    const el = document.createElement('label');
+    el.style.marginRight = '0.5rem';
+    el.innerHTML = `
+      <input type="checkbox" value="${d}"> ${DAY_NAMES[d]}
+    `;
+    el.querySelector('input').checked = selected.includes(d);
+    daysList.appendChild(el);
+  }
+}
+
+function makeBlockRow(cat = '', max = 3) {
+  const tpl = document.getElementById('block-template');
+  const row = tpl.content.cloneNode(true).firstElementChild;
+
+  const select = row.querySelector('.block-category');
+
+  Object.entries(categories).forEach(([api, meta]) => {
+    const opt = document.createElement('option');
+    opt.value = api;
+    opt.textContent = meta.readable ?? api;
+    select.appendChild(opt);
+  });
+
+  select.value = cat || select.options[0]?.value;
+  row.querySelector('.block-max').value = max;
+
+  row.querySelector('.remove-block').onclick = () => {
+    row.remove();
+    if (!blocksList.children.length) addBlock();
+  };
+
+  return row;
+}
+
+function addBlock(cat = '', max = 3) {
+  blocksList.appendChild(makeBlockRow(cat, max));
+}
+
+function applyData(data) {
+  const schedule = data.schedule || {};
+  const hours = schedule.hours_utc || [7, 21];
+  const days = schedule.days || [1,2,3,4,5,6,7];
+  const blocks = data.blocks || [];
+
+  hoursList.innerHTML = '';
+  hours.forEach(addHour);
+
+  renderDays(days);
+
+  blocksList.innerHTML = '';
+  if (blocks.length) {
+    blocks.forEach(b => addBlock(b.category_api_name, b.max_number_of_posts));
+  } else {
+    addBlock();
+  }
+}
+
+async function loadPreference() {
+  try {
+    const resp = await fetch('{{ url_for("mail.get_preference") }}', {
+      method: 'GET',
+      credentials: 'same-origin'
+    });
+
+    const data = await resp.json();
+    applyData(data || {});
+  } catch (e) {
+    console.error(e);
+    applyData({});
+  }
+}
+
+function collectData() {
+  return {
+    schedule: {
+      hours_utc: [...document.querySelectorAll('.hour-input')].map(i => +i.value),
+      days: [...daysList.querySelectorAll('input:checked')].map(i => +i.value)
+    },
+    blocks: [...blocksList.children].map(row => ({
+      category_api_name: row.querySelector('.block-category').value,
+      max_number_of_posts: +row.querySelector('.block-max').value
+    }))
+  };
+}
+
+document.getElementById('add-hour').onclick = () => addHour();
+document.getElementById('add-block').onclick = () => addBlock();
+
+document.getElementById('update-btn').onclick = async () => {
+  statusEl.textContent = 'Сохранение...';
+
+  try {
+    const resp = await fetch('{{ url_for("mail.set_preference") }}', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(collectData()),
+      credentials: 'same-origin'
+    });
+
+    statusEl.textContent = resp.ok ? 'Сохранено' : 'Ошибка';
+  } catch {
+    statusEl.textContent = 'Ошибка';
+  }
+};
+
+loadPreference();
+</script>
 {% endblock %}

@@ -37,6 +37,7 @@ class User(db.Model, SerializerMixin):
         db.DateTime,
         server_default=db.func.now()
     )
+    email_preference = db.Column(db.Text, default='{}')
 
     def get_permission(self, name):
         permissions = settings.PERMISSION_GROUPS.get(self.permission_group)

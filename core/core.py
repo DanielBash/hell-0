@@ -1,11 +1,16 @@
 """Ядро сайта. Логика прописана здесь"""
+import datetime
+import json
+import smtplib
+from email.mime.text import MIMEText
 
 # -- импортирование модулей
 from werkzeug.security import generate_password_hash, check_password_hash
 import settings
 from core.logger import log
-from .models import PostReaction, Post, PostComment, db, PostCommentReaction
+from .models import PostReaction, Post, PostComment, db, PostCommentReaction, User
 from sqlalchemy.exc import IntegrityError
+from . import post_handlers
 
 
 def create_app(name):
@@ -55,6 +60,7 @@ def check_credentials(username, password):
         return user
     return None
 
+
 def set_reaction(user_id, post_id, reaction_type):
     reaction = PostReaction(
         user_id=user_id,
@@ -73,6 +79,7 @@ def set_reaction(user_id, post_id, reaction_type):
         if existing:
             existing.reaction_type = reaction_type
             db.session.commit()
+
 
 def set_reaction_comment(user_id, post_id, reaction_type):
     reaction = PostCommentReaction(
@@ -93,10 +100,12 @@ def set_reaction_comment(user_id, post_id, reaction_type):
             existing.reaction_type = reaction_type
             db.session.commit()
 
+
 def post_add(category, data):
     new_post = Post(category=category, data=data)
     db.session.add(new_post)
     db.session.commit()
+
 
 def post_comment_add(body, user_id, post_id):
     new_post = PostComment(post_id=post_id, user_id=user_id, body=body)
@@ -105,4 +114,85 @@ def post_comment_add(body, user_id, post_id):
 
 
 def posts_handler():
-    pass  # TODO: Make handler work.
+    for i in settings.POST_CATEGORIES:
+        settings.POST_CATEGORIES[i]['handler']()
+
+
+def send_email(user, force=False):
+    import json
+    import smtplib
+    from datetime import datetime
+    from email.mime.text import MIMEText
+    from flask import render_template
+
+    try:
+        pref = json.loads(user.email_preference or "{}")
+    except Exception:
+        pref = {}
+
+    if not pref and not force:
+        return
+
+    if not force:
+        schedule = pref.get('schedule', {})
+        hours = schedule.get('hours_utc', [])
+        days = schedule.get('days', [])
+
+        now = datetime.utcnow()
+        if not (now.hour in hours and now.isoweekday() in days):
+            return
+
+    posts = []
+    blocks = pref.get('blocks', [])
+
+    for block in blocks:
+        category = block.get('category_api_name')
+        limit = block.get('max_number_of_posts', 3)
+
+        if not category:
+            continue
+
+        query = (
+            Post.query
+            .filter_by(category=category)
+            .filter(Post.created_at > user.last_read)
+            .order_by(Post.created_at.desc())
+            .limit(limit)
+        )
+
+        posts.extend(query.all())
+
+    if not posts and not force:
+        return
+
+    html_body = render_template('email.html', posts=posts)
+
+    if not html_body:
+        return
+
+    try:
+        print(f'Отправка письма {user.email}')
+
+        msg = MIMEText(html_body, "html", "utf-8")
+        msg["Subject"] = "Новая рассылка"
+        msg["From"] = settings.NEWSLETTER_EMAIL_INBOX
+        msg["To"] = user.email
+
+        with smtplib.SMTP(settings.NEWSLETTER_EMAIL_SERVER, 25) as server:
+            server.starttls()
+            server.login(
+                settings.NEWSLETTER_EMAIL_INBOX,
+                settings.NEWSLETTER_EMAIL_PASSWORD
+            )
+            server.send_message(msg)
+
+        user.last_read = datetime.utcnow()
+        db.session.commit()
+
+    except Exception as e:
+        print(f"Ошибка отправки письма {e}")
+
+
+def send_emails(force=False):
+    for i in User.query.all():
+        send_email(user=i, force=force)
