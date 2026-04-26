@@ -32,7 +32,7 @@ Table of Contents:
 /* 2. Reset –––––––––––––––––––––––––––––––––––––––––––– */
 
 /* reset block elements  */
-* { box-sizing: border-box; border-spacing: 0; margin: 0; padding: 0; }
+/* { box-sizing: border-box; border-spacing: 0; margin: 0; padding: 0; }
 header, footer, figure, video, details, blockquote,
 ul, ol, dl, fieldset, pre, pre > code {
 	display: block;
@@ -276,7 +276,7 @@ article > h2:first-of-type + p:first-letter, .lettrine {
 }
 
 /* ornaments */
-section:after {
+/*section:after {
 	display: block;
 	margin: 1em 0;
 	color: var(--cmed);
@@ -398,4 +398,75 @@ textarea {
 	height: 8rem;         /* fixed height */
 	resize: none;         /* disable resizing */
 	margin: 0 0 1rem;     /* same spacing as inputs */
+}
+.slide-content {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem;
+    background: #fff;
+}
+
+.slide-image {
+    flex: 0 0 40%;
+}
+
+.slide-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+}
+
+.slide-info {
+    flex: 1;
+}
+
+.slide-info h4 {
+    margin: 0 0 1rem 0;
+    font-size: 28px;
+}
+
+.slide-info p {
+    font-size: 18px;
+    color: #495B70;
+    margin: 0 0 1.5rem 0;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 24px;
+    background: #07c;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.btn:hover {
+    background: #069;
+}
+
+@media (max-width: 768px) {
+    .slide-content {
+        flex-direction: column;
+    }
+    .slide-image {
+        flex: 0 0 auto;
+        width: 100%;
+    }
+}
+
+/* Стили для навигации карусели (стрелки и точки) */
+
+
+.splide__pagination__page {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ccc;
+    border: none;
+    cursor: pointer;
+}
+.splide__pagination__page.is-active {
+    background: #07c;
 }

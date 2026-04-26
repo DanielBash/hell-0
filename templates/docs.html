@@ -1,5 +1,85 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Тут будет краткое описание ресурса, цель его использования - титульная страница!</h1>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        new Splide('.splide', {
+            type: 'fade',
+            pagination: true,
+            arrows: true,
+            autoplay: false,
+            rewind: true,
+        }).mount();
+    });
+</script>
+
+<section id="paragraph-19" class="nh-paragraph widget-sort
+         onmain on-view widget-block nh-editor-panel  js-indent lazyloaded">
+    <link href="//s.siteapi.org/frontend/static/grid_12/css/paragraph.bd2059.min.css" rel="stylesheet" type="text/css">
+    <div data-widget-replaceable-content="19" data-ng-non-bindable=""
+         class="nh-paragraph--indent-top-l nh-paragraph--indent-bottom-l lazyloaded"
+         style="background-position: center;background-repeat: no-repeat;background-size: cover;background-color: rgba(255,255,255, 0);">
+        <div class="js-indent-add"></div>
+        <div class="nh-paragraph-inner__edges">
+            <div class="nh-paragraph-inner__width nh-paragraph-inner__width--two-thirds">
+                <div class="nh-paragraph-header nh-paragraph-header--indent-bottom nh-paragraph-header--center">
+                    <div class="nh-h2 nh-paragraph-header__title nh-paragraph-title--user-inner nh-paragraph-header__title--two-thirds nh-paragraph-header__title--center"
+                         style="color: #000000;"><h2>hell-0</h2></div>
+                </div>
+                <div class="nh-paragraph-desc--user-inner" style="color: #475569;"><p
+                        class="align-center nh-text-editor__fontsize-18">Новости из разных ресурсов в одном месте.
+                    Делитесь, обсуждайте, подписывайтесь на новости из разных источников, со всех концов интернета.</p>
+                    <p class="align-center nh-text-editor__fontsize-18">
+                        <a href="https://github.com/DanielBash/hell-0">Потробности о проекте по ссылке</a>
+                    </p>
+                    <p><br></p></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<h1 style="text-align: center;">Участники</h1>
+
+
+<section class="ncarousel">
+    <div class="splide" data-splide='{"type":"fade","pagination":true,"arrows":false,"autoplay":false,"rewind":true}'>
+        <div class="splide__track">
+            <ul class="splide__list">
+
+
+                <li class="splide__slide">
+                    <div class="slide-content">
+                        <div class="slide-image">
+                            <img src="/static/images/daniel_im" alt="Изображение">
+                        </div>
+                        <div class="slide-info">
+                            <h4>Daniel-Bash</h4>
+                            <p>Описание уникального предложения</p>
+                            <a href="https://github.com/DanielBash/" class="btn">Посетить github</a>
+                        </div>
+                    </div>
+                </li>
+
+
+                <li class="splide__slide">
+                    <div class="slide-content">
+                        <div class="slide-image">
+                            <img src="/static/images/Svinus.jpg" alt="Изображение">
+                        </div>
+                        <div class="slide-info">
+                            <h4>Zabiv</h4>
+                            <p>описание</p>
+                        </div>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</section>
+
+
 {% endblock %}

@@ -2,33 +2,46 @@
 
 {% block content %}
 
-  {% for fieldname, errors in form.errors.items() %}
-    {% for error in errors %}
-<aside>
-<div class="card warn">
- <p>{{ form[fieldname].label.text or fieldname }}</p>
- <p>{{ error }}</p>
-</div>
-</aside>
-    {% endfor %}
-  {% endfor %}
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/card.css') }}">
+</head>
 
-<h1>Вход в hell-0</h1>
-<p>Это страница входа. Главная страница <a href="{{ url_for('main.index') }}">здесь</a>. Если у вас нет аккаунта, зарегистрироваться можно
-<a href="{{ url_for('auth.register') }}">здесь</a>.</p>
-<form method="POST">
-      {{ form.hidden_tag() }}
-      <fieldset>
-          <legend>Логин</legend>
+
+{% for fieldname, errors in form.errors.items() %}
+{% for error in errors %}
+<aside>
+    <div class="card warn">
+        <p>{{ form[fieldname].label.text or fieldname }}</p>
+        <p>{{ error }}</p>
+    </div>
+</aside>
+{% endfor %}
+{% endfor %}
+
+
+<div class="login-card">
+    <div class="login-header">
+        <img src="/static/images/logo.png" alt="Описание картинки">
+        <h1>Вход в hell-0</h1>
+    </div>
+
+    <p>Это страница входа. Главная страница <a href="{{ url_for('main.index') }}">здесь</a>. Если у вас нет аккаунта,
+        зарегистрироваться можно
+        <a href="{{ url_for('auth.register') }}">здесь</a>.</p>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <fieldset>
+            <legend>Логин</legend>
             {{ form.username.label }}
             {{ form.username(size=32) }}
             {{ form.password.label }}
             {{ form.password(size=32) }}
-      </fieldset>
+        </fieldset>
 
-      <fieldset id="forms__action">
-        <legend>Отправить</legend>
-          {{ form.submit() }}
-      </fieldset>
+        <fieldset id="forms__action">
+            <legend>Отправить</legend>
+            {{ form.submit() }}
+        </fieldset>
     </form>
+</div>
 {% endblock %}

@@ -2,6 +2,10 @@
 
 {% block content %}
 
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/card.css') }}">
+</head>
+
   {% for fieldname, errors in form.errors.items() %}
     {% for error in errors %}
 <aside>
@@ -12,7 +16,7 @@
 </aside>
     {% endfor %}
   {% endfor %}
-
+<div class="login-card">
 <h1>Редактировать профиль</h1>
 <p>Это форма редактирования вашего профиля, сам профиль <a href="{{ url_for('users.user', username=user.username) }}">здесь</a>. На случай, если вы потерялись, главная
 <a href="{{ url_for('main.index') }}">здесь</a>.</p>
@@ -31,4 +35,5 @@
           {{ form.submit() }}
       </fieldset>
     </form>
+</div>
 {% endblock %}

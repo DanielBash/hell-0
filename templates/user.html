@@ -2,39 +2,46 @@
 
 {% block content %}
 
-<h1>Hell-0, {{ target_user.username }}!</h1>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/card.css') }}">
+</head>
 
-{% if user and user.username == target_user.username %}
-<p>О, да это же ваш профиль! Хотите <a href="{{ url_for('auth.logout') }}">выйти</a>? Профиль доступен для редактирования <a href="{{ url_for('auth.edit') }}">на этой странице</a></p>
-{% else %}
-<p>Пожалуйста, будьте вежливы с данным пользователем.</p>
-{% endif%}
+<div class="login-card">
+    <h1>Hell-0, {{ target_user.username }}!</h1>
 
-<figure>
-<table>
- <thead>
-  <tr>
-   <th>Параметр</th>
-   <th>Значение</th>
-  </tr>
- </thead>
- <tbody>
-    <tr>
-      <td>Привилегии</td>
-      <td>{{target_user.permission_group}}</td>
-    </tr>
+    {% if user and user.username == target_user.username %}
+    <p>О, да это же ваш профиль! Хотите <a href="{{ url_for('auth.logout') }}">выйти</a>? Профиль доступен для
+        редактирования <a href="{{ url_for('auth.edit') }}">на этой странице</a></p>
+    {% else %}
+    <p>Пожалуйста, будьте вежливы с данным пользователем.</p>
+    {% endif%}
 
-    <tr>
-      <td>Статус</td>
-      <td>{{target_user.status}}</td>
-    </tr>
+    <figure>
+        <table>
+            <thead>
+            <tr>
+                <th>Параметр</th>
+                <th>Значение</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Привилегии</td>
+                <td>{{target_user.permission_group}}</td>
+            </tr>
 
-    <tr>
-      <td>Зарегестрирован</td>
-      <td>{{target_user.registered_at}}</td>
-    </tr>
- </tbody>
-</table>
-</figure>
-<p>Обо мне: {{target_user.bio}}</p>
+            <tr>
+                <td>Статус</td>
+                <td>{{target_user.status}}</td>
+            </tr>
+
+            <tr>
+                <td>Зарегестрирован</td>
+                <td>{{target_user.registered_at}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </figure>
+    <p>Обо мне: {{target_user.bio}}</p>
+</div>
 {% endblock %}
