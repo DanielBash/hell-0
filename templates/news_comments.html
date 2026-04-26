@@ -5,14 +5,14 @@
 <h1>Пост</h1>
 <div>
     <p>{{ post.data }} Время публикации: {{ post.created_at|relative_time }}</p>
-     <a href="{{url_for('news.category', category=post.category)}}">Вернуться</a>
-    <div>
+    <a href="{{url_for('news.category', category=post.category)}}">Вернуться</a>
+    <div data-reactions-post="{{ post.id }}">
         {% set user_reaction = post.user_reaction(user.id) if user else None %}
         {% for key, emoji in reactions.items() %}
-            <form action="{{ url_for('news.react', post_id=post.id) }}" method="POST" style="display:inline;">
+            <form class="reaction-form" action="{{ url_for('news.react', post_id=post.id) }}" method="POST" style="display:inline;">
                 <input type="hidden" name="reaction" value="{{ key }}">
-                <button type="submit">
-                    {{ emoji }} {{ post.reaction_count(key) }}
+                <button type="submit" data-reaction="{{ key }}" style="{% if user_reaction and user_reaction.reaction_type == key %}font-weight:bold;{% endif %}">
+                    {{ emoji }} <span class="reaction-count">{{ post.reaction_count(key) }}</span>
                 </button>
             </form>
         {% endfor %}
@@ -24,13 +24,13 @@
 <div>
     <a href="{{url_for('users.user', username=i.user.username)}}">{{i.user.username}}</a>
     <p>{{ i.body }} Время публикации: {{ i.created_at|relative_time }}</p>
-     <a href="{{url_for('news.comments', post_id=i.id)}}">Посмотреть комментарии</a>
-    <div>
+    <div data-reactions-comment="{{ i.id }}">
+        {% set comment_reaction = i.reactions.filter_by(user_id=user.id).first() if user else None %}
         {% for key, emoji in reactions.items() %}
-            <form action="{{ url_for('news.react_comment', post_id=i.id) }}" method="POST" style="display:inline;">
+            <form class="reaction-form" action="{{ url_for('news.react_comment', comment_id=i.id) }}" method="POST" style="display:inline;">
                 <input type="hidden" name="reaction" value="{{ key }}">
-                <button type="submit">
-                    {{ emoji }} {{ i.reaction_count(key) }}
+                <button type="submit" data-reaction="{{ key }}" style="{% if comment_reaction and comment_reaction.reaction_type == key %}font-weight:bold;{% endif %}">
+                    {{ emoji }} <span class="reaction-count">{{ i.reaction_count(key) }}</span>
                 </button>
             </form>
         {% endfor %}
@@ -45,11 +45,29 @@
             {{ form.text.label }}
             {{ form.text(size=32) }}
       </fieldset>
-
       <fieldset id="forms__action">
         <legend>Отправить</legend>
           {{ form.submit() }}
       </fieldset>
-    </form>
+</form>
+
+<script>
+document.querySelectorAll('.reaction-form').forEach(function(form) {
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var data = new FormData(form);
+        fetch(form.action, { method: 'POST', body: data })
+            .then(function(r) { return r.json(); })
+            .then(function(json) {
+                var container = form.closest('[data-reactions-post], [data-reactions-comment]');
+                container.querySelectorAll('button[data-reaction]').forEach(function(btn) {
+                    var key = btn.getAttribute('data-reaction');
+                    btn.querySelector('.reaction-count').textContent = json.counts[key] || 0;
+                    btn.style.fontWeight = json.user_reaction === key ? 'bold' : '';
+                });
+            });
+    });
+});
+</script>
 
 {% endblock %}

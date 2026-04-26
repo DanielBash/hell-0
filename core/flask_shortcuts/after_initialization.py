@@ -1,6 +1,5 @@
 """Функция, запускающаяся после инициализации"""
 
-# -- импорт модулей
 import settings
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask import current_app
@@ -23,10 +22,20 @@ def main():
         log.info("Создание админ-пользователя...")
         create_admin_user()
 
-        log.info("Планировка обновления новостей...")
+        app = current_app._get_current_object()
+
+        def _posts_handler_job():
+            with app.app_context():
+                posts_handler()
+
+        def _send_emails_job():
+            with app.app_context():
+                send_emails()
+
+        log.info("Планировка обновления новостей (каждые 5 минут)...")
         scheduler = BackgroundScheduler()
-        scheduler.add_job(func=posts_handler, trigger="interval", hours=0.1)
-        scheduler.add_job(func=send_emails, trigger="interval", hours=0.1)
+        scheduler.add_job(func=_posts_handler_job, trigger="interval", minutes=5)
+        scheduler.add_job(func=_send_emails_job, trigger="interval", minutes=5)
         scheduler.start()
 
 

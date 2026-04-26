@@ -4,7 +4,6 @@ import json
 import smtplib
 from email.mime.text import MIMEText
 
-# -- импортирование модулей
 from werkzeug.security import generate_password_hash, check_password_hash
 import settings
 from core.logger import log
@@ -119,80 +118,60 @@ def posts_handler():
 
 
 def send_email(user, force=False):
-    import json
-    import smtplib
-    from datetime import datetime
-    from email.mime.text import MIMEText
     from flask import render_template
 
     try:
-        pref = json.loads(user.email_preference or "{}")
+        pref = json.loads(user.email_preference or '{}')
     except Exception:
         pref = {}
 
-    if not pref and not force:
+    blocks = pref.get('blocks', [])
+    if not blocks:
         return
 
-    if not force:
-        schedule = pref.get('schedule', {})
-        hours = schedule.get('hours_utc', [])
-        days = schedule.get('days', [])
+    last_sent = user.last_email_sent or datetime.datetime(2000, 1, 1)
 
-        now = datetime.utcnow()
-        if not (now.hour in hours and now.isoweekday() in days):
+    if not force:
+        elapsed = (datetime.datetime.utcnow() - last_sent).total_seconds()
+        if elapsed < 86400:
             return
 
     posts = []
-    blocks = pref.get('blocks', [])
-
     for block in blocks:
         category = block.get('category_api_name')
         limit = block.get('max_number_of_posts', 3)
-
         if not category:
             continue
+        query = Post.query.filter_by(category=category).order_by(Post.created_at.desc())
+        if not force:
+            query = query.filter(Post.created_at > last_sent)
+        posts.extend(query.limit(limit).all())
 
-        query = (
-            Post.query
-            .filter_by(category=category)
-            .filter(Post.created_at > user.last_read)
-            .order_by(Post.created_at.desc())
-            .limit(limit)
-        )
-
-        posts.extend(query.all())
-
-    if not posts and not force:
+    if not posts:
         return
 
     html_body = render_template('email.html', posts=posts)
-
     if not html_body:
         return
 
     try:
-        print(f'Отправка письма {user.email}')
-
-        msg = MIMEText(html_body, "html", "utf-8")
-        msg["Subject"] = "Новая рассылка"
-        msg["From"] = settings.NEWSLETTER_EMAIL_INBOX
-        msg["To"] = user.email
+        msg = MIMEText(html_body, 'html', 'utf-8')
+        msg['Subject'] = 'Новая рассылка'
+        msg['From'] = settings.NEWSLETTER_EMAIL_INBOX
+        msg['To'] = user.email
 
         with smtplib.SMTP(settings.NEWSLETTER_EMAIL_SERVER, 25) as server:
             server.starttls()
-            server.login(
-                settings.NEWSLETTER_EMAIL_INBOX,
-                settings.NEWSLETTER_EMAIL_PASSWORD
-            )
+            server.login(settings.NEWSLETTER_EMAIL_INBOX, settings.NEWSLETTER_EMAIL_PASSWORD)
             server.send_message(msg)
 
-        user.last_read = datetime.utcnow()
+        user.last_email_sent = datetime.datetime.utcnow()
         db.session.commit()
-
+        log.info(f'Email отправлен: {user.email}')
     except Exception as e:
-        print(f"Ошибка отправки письма {e}")
+        log.error(f'Ошибка отправки письма {user.email}: {e}')
 
 
 def send_emails(force=False):
-    for i in User.query.all():
-        send_email(user=i, force=force)
+    for user in User.query.all():
+        send_email(user=user, force=force)
