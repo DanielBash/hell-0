@@ -1,8 +1,28 @@
 {% extends "base.html" %}
 
+
+
+
 {% block content %}
-<h1>Доступные каналы:</h1>
-{% for i in categories %}
-<a href="{{url_for('news.category', category=i[1])}}">{{i[0]}}</a>
-{% endfor %}
+<div class="container">
+    <h1>{{ title }}</h1>
+
+    {% if posts_by_category %}
+        {% for category, posts in posts_by_category.items() %}
+            <div class="login-card">
+                <h2>{{ category }}</h2>
+                {% for post in posts %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <p class="card-text">{{ post.data }}</p>
+                            <small class="text-muted">{{ post.created_at.strftime('%d.%m.%Y %H:%M') }}</small>
+                        </div>
+                    </div>
+            </div>
+            {% endfor %}
+        {% endfor %}
+    {% else %}
+        <p>Новостей пока нет.</p>
+    {% endif %}
+</div>
 {% endblock %}

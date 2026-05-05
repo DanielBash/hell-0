@@ -12,9 +12,25 @@ bp = Blueprint('news', __name__)
 
 @bp.route('/', methods=['GET'])
 def index():
-    categories = [(settings.POST_CATEGORIES[i[0]]['readable'], i[0]) for i in db.session.query(Post.category).distinct().all()]
+    categories = [(settings.POST_CATEGORIES[i[0]]['readable'], i[0]) for i in
+                  db.session.query(Post.category).distinct().all()]
 
-    return render_template('news_all.html', title='Новости', categories=categories)
+    posts_by_category = dict()
+
+    all_posts = Post.query.order_by(Post.created_at.desc()).all()
+
+    for post in all_posts:
+        category_name = post.category
+
+        if category_name in posts_by_category:
+            posts_by_category[category_name].append(post)
+        else:
+            posts_by_category[category_name] = [post]
+
+    return render_template('news_all.html',
+                           title='Новости',
+                           posts_by_category=posts_by_category)
+
 
 @bp.route('/category/<string:category>', methods=['GET'])
 def category(category):
