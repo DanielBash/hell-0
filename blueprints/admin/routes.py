@@ -9,8 +9,14 @@ from blueprints.admin.forms import SystemMessageForm
 from core.core import post_add, posts_handler, send_emails
 from core.flask_shortcuts.decorators import required_permissions
 from core.logger import log
+from core.models import ScheduledJob
 
 bp = Blueprint('admin', __name__)
+
+
+def _render(form):
+    jobs = ScheduledJob.query.order_by(ScheduledJob.name).all()
+    return render_template('admin.html', title='Админ-Панель', form=form, jobs=jobs)
 
 
 @bp.route('/', methods=['GET', 'POST'])
@@ -20,9 +26,9 @@ def index():
     if form.validate_on_submit():
         post_add(form.category.data, form.text.data)
         flash('Сообщение успешно отправлено!', category='Сообщение')
-        return render_template('admin.html', title='Админ-Панель', form=form)
+        return _render(form)
 
-    return render_template('admin.html', title='Админ-Панель', form=form)
+    return _render(form)
 
 
 @bp.route('/posts_update', methods=['GET', 'POST'])

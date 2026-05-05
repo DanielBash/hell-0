@@ -4,6 +4,10 @@
 
 <h1>Hell-0, {{ target_user.username }}!</h1>
 
+{% if target_user.profile_picture %}
+<img src="{{ url_for('static', filename='images/profiles/' + target_user.profile_picture) }}" alt="{{ target_user.username }}">
+{% endif %}
+
 {% if user and user.username == target_user.username %}
 <p>О, да это же ваш профиль! Хотите <a href="{{ url_for('auth.logout') }}">выйти</a>? Профиль доступен для редактирования <a href="{{ url_for('auth.edit') }}">на этой странице</a></p>
 {% else %}

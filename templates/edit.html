@@ -16,7 +16,7 @@
 <h1>Редактировать профиль</h1>
 <p>Это форма редактирования вашего профиля, сам профиль <a href="{{ url_for('users.user', username=user.username) }}">здесь</a>. На случай, если вы потерялись, главная
 <a href="{{ url_for('main.index') }}">здесь</a>.</p>
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
       {{ form.hidden_tag() }}
       <fieldset>
           <legend>Edit</legend>
@@ -24,6 +24,8 @@
             {{ form.bio(size=32) }}</p>
             <p>{{ form.status.label }}
             {{ form.status(size=32) }}</p>
+            <p>{{ form.picture.label }}
+            {{ form.picture() }}</p>
       </fieldset>
 
       <fieldset id="forms__action">

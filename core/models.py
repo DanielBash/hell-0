@@ -1,5 +1,7 @@
 """Инициализация базы данных"""
 
+import datetime
+
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy_serializer import SerializerMixin
@@ -26,6 +28,7 @@ class User(db.Model, SerializerMixin):
     last_read = db.Column(db.DateTime, server_default=db.func.now())
     last_email_sent = db.Column(db.DateTime, server_default=db.func.now())
     email_preference = db.Column(db.Text, default='{}')
+    profile_picture = db.Column(db.String(256), nullable=True)
 
     def get_permission(self, name):
         permissions = settings.PERMISSION_GROUPS.get(self.permission_group)
@@ -134,3 +137,18 @@ class PostCommentReaction(db.Model, SerializerMixin):
     __table_args__ = (
         db.UniqueConstraint("user_id", "comment_id", name="uq_user_comment_reaction"),
     )
+
+
+class ScheduledJob(db.Model, SerializerMixin):
+    __tablename__ = "scheduled_jobs"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), unique=True, nullable=False)
+    last_run = db.Column(db.DateTime, nullable=True)
+    interval_minutes = db.Column(db.Integer, nullable=False, default=5)
+
+    @property
+    def next_run(self):
+        if self.last_run is None:
+            return None
+        return self.last_run + datetime.timedelta(minutes=self.interval_minutes)
