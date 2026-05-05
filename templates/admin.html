@@ -19,4 +19,6 @@
           {{ form.submit() }}
       </fieldset>
     </form>
+<a href="{{url_for('admin.posts_update')}}">Обновить посты</a>
+<a href="{{url_for('admin.send_emails_force')}}">Отправить рассылку</a>
 {% endblock %}

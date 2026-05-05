@@ -2,7 +2,42 @@
 
 {% block content %}
 <h1>Последние посты:</h1>
+
 {% for i in posts %}
-<p>{{i.data}}</p>
+<div>
+    <p>{{ i.data | markdown }} Время публикации: {{ i.created_at|relative_time }}</p>
+    <a href="{{url_for('news.comments', post_id=i.id)}}">Посмотреть комментарии</a>
+    <div data-reactions-post="{{ i.id }}">
+        {% set user_reaction = i.user_reaction(user.id) if user else None %}
+        {% for key, emoji in reactions.items() %}
+            <form class="reaction-form" action="{{ url_for('news.react', post_id=i.id) }}" method="POST" style="display:inline;">
+                <input type="hidden" name="reaction" value="{{ key }}">
+                <button type="submit" data-reaction="{{ key }}" style="{% if user_reaction and user_reaction.reaction_type == key %}font-weight:bold;{% endif %}">
+                    {{ emoji }} <span class="reaction-count">{{ i.reaction_count(key) }}</span>
+                </button>
+            </form>
+        {% endfor %}
+    </div>
+</div>
 {% endfor %}
+
+<script>
+document.querySelectorAll('.reaction-form').forEach(function(form) {
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var data = new FormData(form);
+        fetch(form.action, { method: 'POST', body: data })
+            .then(function(r) { return r.json(); })
+            .then(function(json) {
+                var container = form.closest('[data-reactions-post]');
+                container.querySelectorAll('button[data-reaction]').forEach(function(btn) {
+                    var key = btn.getAttribute('data-reaction');
+                    btn.querySelector('.reaction-count').textContent = json.counts[key] || 0;
+                    btn.style.fontWeight = json.user_reaction === key ? 'bold' : '';
+                });
+            });
+    });
+});
+</script>
+
 {% endblock %}
