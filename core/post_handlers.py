@@ -64,3 +64,53 @@ def posts_habr():
 @post_handler('hell-0', 'Обновления сайта')
 def posts_hello():
     pass
+
+
+@post_handler('arxiv_ai', 'arXiv: AI / ML')
+def posts_arxiv_ai():
+    _fetch_rss('http://export.arxiv.org/rss/cs.AI', 'arxiv_ai')
+
+
+@post_handler('arxiv_physics', 'arXiv: Physics')
+def posts_arxiv_physics():
+    _fetch_rss('http://export.arxiv.org/rss/physics', 'arxiv_physics')
+
+
+@post_handler('nature', 'Nature News')
+def posts_nature():
+    _fetch_rss('https://www.nature.com/nature.rss', 'nature')
+
+
+@post_handler('science_mag', 'Science Magazine')
+def posts_science_mag():
+    _fetch_rss('https://www.science.org/rss/news_current.xml', 'science_mag')
+
+
+@post_handler('phys_org', 'Phys.org')
+def posts_phys_org():
+    _fetch_rss('https://phys.org/rss-feed/', 'phys_org')
+
+
+@post_handler('nplus1', 'N+1 (наука)')
+def posts_nplus1():
+    _fetch_rss('https://nplus1.ru/rss', 'nplus1')
+
+
+@post_handler('naked_science', 'Naked Science')
+def posts_naked_science():
+    _fetch_rss('https://naked-science.ru/feed', 'naked_science')
+
+
+@post_handler('hackernews', 'Hacker News')
+def posts_hackernews():
+    _fetch_rss('https://hnrss.org/frontpage', 'hackernews')
+
+
+@post_handler('lenta', 'Лента.ру')
+def posts_lenta():
+    _fetch_rss('https://lenta.ru/rss/news', 'lenta')
+
+
+@post_handler('3dnews', '3DNews')
+def posts_3dnews():
+    _fetch_rss('https://3dnews.ru/news/rss/', '3dnews')

@@ -36,7 +36,10 @@ def index():
 @bp.route('/category/<string:category>', methods=['GET'])
 def category(category):
     readable_category = settings.POST_CATEGORIES[category]['readable']
-    posts = Post.query.filter_by(category=category).order_by(Post.created_at).all()
+    page = request.args.get('page', 1, type=int)
+    pagination = (Post.query.filter_by(category=category)
+                  .order_by(Post.created_at.desc())
+                  .paginate(page=page, per_page=20, error_out=False))
 
     if g.user:
         now = datetime.datetime.utcnow()
@@ -47,7 +50,9 @@ def category(category):
             db.session.add(UserCategoryRead(user_id=g.user.id, category=category, last_read=now))
         db.session.commit()
 
-    return render_template('news_category.html', title=readable_category, posts=posts, reactions=settings.POST_REACTIONS)
+    return render_template('news_category.html', title=readable_category,
+                           posts=pagination.items, pagination=pagination,
+                           category=category, reactions=settings.POST_REACTIONS)
 
 
 @bp.route('/react/<int:post_id>', methods=['POST'])
