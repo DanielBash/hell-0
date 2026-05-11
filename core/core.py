@@ -4,12 +4,13 @@ import json
 import smtplib
 from email.mime.text import MIMEText
 
+from sqlalchemy.exc import IntegrityError
 from werkzeug.security import generate_password_hash, check_password_hash
+from wrapt_timeout_decorator import timeout
+import core.post_handlers
 import settings
 from core.logger import log
 from .models import PostReaction, Post, PostComment, db, PostCommentReaction, User
-from sqlalchemy.exc import IntegrityError
-from . import post_handlers
 
 
 def create_app(name):
@@ -50,7 +51,7 @@ def register_user(username, password, email,
 
 
 def check_credentials(username, password):
-    from .models import User, db
+    from .models import User
 
     user = User.query.filter_by(username=username).first()
     if user is None:
@@ -111,10 +112,17 @@ def post_comment_add(body, user_id, post_id):
     db.session.add(new_post)
     db.session.commit()
 
+@timeout(3)
+def cat(cat):
+    settings.POST_CATEGORIES[cat]['handler']()
+
 
 def posts_handler():
     for i in settings.POST_CATEGORIES:
-        settings.POST_CATEGORIES[i]['handler']()
+        try:
+            cat(i)
+        except Exception:
+            print(f'Не получилось обновить канал: {i}')
 
 
 def send_email(user, force=False):
