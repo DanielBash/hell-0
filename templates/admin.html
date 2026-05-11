@@ -21,4 +21,17 @@
     </form>
 <a href="{{url_for('admin.posts_update')}}">Обновить посты</a>
 <a href="{{url_for('admin.send_emails_force')}}">Отправить рассылку</a>
+
+<h2>Запланированные задачи</h2>
+<ul>
+{% for job in jobs %}
+<li>
+{{ job.name }} (каждые {{ job.interval_minutes }} мин) —
+последний запуск: {% if job.last_run %}{{ job.last_run|relative_time }}{% else %}никогда{% endif %},
+следующий: {% if job.next_run %}{{ job.next_run|relative_time }}{% else %}скоро{% endif %}
+</li>
+{% else %}
+<li>Пока нет данных — задачи запустятся в ближайшее время.</li>
+{% endfor %}
+</ul>
 {% endblock %}

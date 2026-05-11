@@ -3,6 +3,7 @@
 
 # -- импортирование модулей
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 
@@ -58,4 +59,5 @@ class LoginForm(FlaskForm):
 class ProfileEditForm(FlaskForm):
     bio = TextAreaField(label='Обо мне', validators=[DataRequired(), Length(max=5000, message='Не длинее 5000 символов.')])
     status = StringField(label='Статус', validators=[DataRequired(), Length(min=5, max=30, message='Хотябы 5 и меньше 31')])
+    picture = FileField(label='Аватар', validators=[FileAllowed(['jpg', 'jpeg', 'png', 'gif', 'webp'], 'Только изображения.')])
     submit = SubmitField('Применить')

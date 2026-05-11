@@ -2,12 +2,30 @@
 
 # -- импорт модулей
 import datetime
+import os
+import secrets
+
 from flask import current_app, flash, redirect, url_for, session, g
 from flask import Blueprint, render_template
+from werkzeug.utils import secure_filename
+
 from core.core import register_user, check_credentials
 from core.flask_shortcuts.decorators import login_required
 from core.models import User, db
 from .forms import RegistrationForm, LoginForm, ProfileEditForm
+
+
+PROFILE_PICTURE_DIR = os.path.join('static', 'images', 'profiles')
+
+
+def _save_profile_picture(file_storage, user):
+    ext = os.path.splitext(secure_filename(file_storage.filename))[1].lower()
+    if not ext:
+        return
+    filename = f'{user.id}_{secrets.token_hex(4)}{ext}'
+    os.makedirs(PROFILE_PICTURE_DIR, exist_ok=True)
+    file_storage.save(os.path.join(PROFILE_PICTURE_DIR, filename))
+    user.profile_picture = filename
 
 
 bp = Blueprint('auth', __name__)
@@ -56,7 +74,10 @@ def logout():
 def edit():
     form = ProfileEditForm(obj=g.user)
     if form.validate_on_submit():
-        form.populate_obj(g.user)
+        g.user.bio = form.bio.data
+        g.user.status = form.status.data
+        if form.picture.data:
+            _save_profile_picture(form.picture.data, g.user)
         db.session.commit()
         flash('Информация успешно обновлена', 'Успех')
         return redirect(url_for('users.user', username=g.user.username))
