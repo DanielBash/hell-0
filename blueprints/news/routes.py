@@ -10,13 +10,13 @@ import settings
 from core.core import set_reaction, set_reaction_comment, post_comment_add
 from flask import g
 
-
 bp = Blueprint('news', __name__)
 
 
 @bp.route('/', methods=['GET'])
 def index():
-    categories = [[settings.POST_CATEGORIES[i[0]]['readable'], i[0], 0] for i in db.session.query(Post.category).distinct().all()]
+    categories = [[settings.POST_CATEGORIES[i[0]]['readable'], i[0], 0] for i in
+                  db.session.query(Post.category).distinct().all()]
 
     if g.user:
         reads = {r.category: r.last_read for r in UserCategoryRead.query.filter_by(user_id=g.user.id).all()}

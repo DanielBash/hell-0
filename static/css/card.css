@@ -29,6 +29,12 @@
           min-width: 100%;
         }
 
+        .cards-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;   /* --------------ОТСТУП */
+            align-items: center;
+
         .login-card {
           margin-top: 50px;
           max-width: 500px;
@@ -37,9 +43,56 @@
           background-color: var(--tg-bg);
           border-radius: 16px;
           box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-          padding: 32px 24px;
+          padding: 32px 32px 32px 32px;
           border: 1px solid rgba(0,0,0,0.04);
         }
+        .login-card-comments {
+          margin-top: 50px;
+          max-width: 500px;
+          width: 100%;
+          height: 100%;
+          background-color: #f5fafc;
+          border-radius: 16px;
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.01);
+          padding: 10px 10px 10px 10px;
+          border: 1px solid rgba(0,0,0,0.04);
+        }
+
+
+        .login-card_marginless {
+          margin-top: 12px;
+
+          max-width: 500px;
+          width: 100%;
+          height: 100%;
+          background-color: var(--tg-bg);
+          border-radius: 16px;
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+          padding: 32px 32px 32px 32px;
+          border: 1px solid rgba(0,0,0,0.04);
+        }
+        .login-card_marginless > :first-child {
+            margin-top: 0;
+}
+        .login-card > :first-child {
+            margin-top: 0;
+}
+        .login-card_user > :first-child {
+            margin-top: 0;
+}
+        .login-card_user {
+          margin-top: 50px;
+          max-width: 700px;
+          width: 100%;
+          height: 100%;
+          background-color: var(--tg-bg);
+          border-radius: 16px;
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+          padding: 32px 32px 32px 32px;
+          border: 1px solid rgba(0,0,0,0.04);
+        }
+
+
 
         .login-header {
           text-align: center;

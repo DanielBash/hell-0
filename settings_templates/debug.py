@@ -2,4 +2,4 @@
 
 from .default import *
 
-DEBUG = True   # включаем режим отладки
+DEBUG = True  # включаем режим отладки

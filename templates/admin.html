@@ -1,37 +1,45 @@
 {% extends "base.html" %}
 
 {% block content %}
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/card.css') }}">
+</head>
 
-<h1>Привет, {{user.username}}!</h1>
+<div class="cards-vertical">
+    <div class="login-card">
 
-<form method="POST">
-      {{ form.hidden_tag() }}
-      <fieldset>
-          <legend>Отправить системное сообщение</legend>
-            {{ form.category.label }}
-            {{ form.category(height=50) }}
-            {{ form.text.label }}
-            {{ form.text(size=32) }}
-      </fieldset>
+        <h1>Привет, {{user.username}}!</h1>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <fieldset>
+                <legend>Отправить системное сообщение</legend>
+                {{ form.category.label }}
+                {{ form.category(height=50) }}
+                {{ form.text.label }}
+                {{ form.text(size=32) }}
+            </fieldset>
 
-      <fieldset id="forms__action">
-        <legend>Отправка формы</legend>
-          {{ form.submit() }}
-      </fieldset>
-    </form>
-<a href="{{url_for('admin.posts_update')}}">Обновить посты</a>
-<a href="{{url_for('admin.send_emails_force')}}">Отправить рассылку</a>
+            <fieldset id="forms__action">
+                <legend>Отправка формы</legend>
+                {{ form.submit() }}
+            </fieldset>
+        </form>
+        <a href="{{url_for('admin.posts_update')}}">Обновить посты</a>
+        <a href="{{url_for('admin.send_emails_force')}}">Отправить рассылку</a>
 
-<h2>Запланированные задачи</h2>
-<ul>
-{% for job in jobs %}
-<li>
-{{ job.name }} (каждые {{ job.interval_minutes }} мин) —
-последний запуск: {% if job.last_run %}{{ job.last_run|relative_time }}{% else %}никогда{% endif %},
-следующий: {% if job.next_run %}{{ job.next_run|relative_time }}{% else %}скоро{% endif %}
-</li>
-{% else %}
-<li>Пока нет данных — задачи запустятся в ближайшее время.</li>
-{% endfor %}
-</ul>
+
+        <h2>Запланированные задачи</h2>
+        <ul>
+            {% for job in jobs %}
+            <li>
+                {{ job.name }} (каждые {{ job.interval_minutes }} мин) —
+                последний запуск: {% if job.last_run %}{{ job.last_run|relative_time }}{% else %}никогда{% endif %},
+                следующий: {% if job.next_run %}{{ job.next_run|relative_time }}{% else %}скоро{% endif %}
+            </li>
+            {% else %}
+            <li>Пока нет данных — задачи запустятся в ближайшее время.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
 {% endblock %}

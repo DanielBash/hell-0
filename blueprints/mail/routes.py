@@ -21,7 +21,8 @@ def index():
         categories[i] = {}
         categories[i]['readable'] = POST_CATEGORIES[i]['readable']
     return render_template('mail_all.html', title='Рассылки',
-                           categories=categories) # {'category_api_name': {'readable': 'readable category name'}}
+                           categories=categories)  # {'category_api_name': {'readable': 'readable category name'}}
+
 
 @bp.route('set/', methods=['POST'])
 @login_required

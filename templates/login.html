@@ -18,30 +18,32 @@
 {% endfor %}
 {% endfor %}
 
+<div class="cards-vertical">
+    <div class="login-card">
+        <div class="login-header">
+            <img src="/static/images/logo.png" alt="Описание картинки">
+            <h1>Вход в hell-0</h1>
+        </div>
 
-<div class="login-card">
-    <div class="login-header">
-        <img src="/static/images/logo.png" alt="Описание картинки">
-        <h1>Вход в hell-0</h1>
+        <p>Это страница входа. Главная страница <a href="{{ url_for('main.index') }}">здесь</a>. Если у вас нет
+            аккаунта,
+            зарегистрироваться можно
+            <a href="{{ url_for('auth.register') }}">здесь</a>.</p>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <fieldset>
+                <legend>Логин</legend>
+                {{ form.username.label }}
+                {{ form.username(size=32) }}
+                {{ form.password.label }}
+                {{ form.password(size=32) }}
+            </fieldset>
+
+            <fieldset id="forms__action">
+                <legend>Отправить</legend>
+                {{ form.submit() }}
+            </fieldset>
+        </form>
     </div>
-
-    <p>Это страница входа. Главная страница <a href="{{ url_for('main.index') }}">здесь</a>. Если у вас нет аккаунта,
-        зарегистрироваться можно
-        <a href="{{ url_for('auth.register') }}">здесь</a>.</p>
-    <form method="POST">
-        {{ form.hidden_tag() }}
-        <fieldset>
-            <legend>Логин</legend>
-            {{ form.username.label }}
-            {{ form.username(size=32) }}
-            {{ form.password.label }}
-            {{ form.password(size=32) }}
-        </fieldset>
-
-        <fieldset id="forms__action">
-            <legend>Отправить</legend>
-            {{ form.submit() }}
-        </fieldset>
-    </form>
 </div>
 {% endblock %}

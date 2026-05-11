@@ -1,28 +1,27 @@
 {% extends "base.html" %}
 
-
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/card.css') }}">
+{% endblock %}
 
 
 {% block content %}
-<div class="container">
-    <h1>{{ title }}</h1>
-
-    {% if posts_by_category %}
-        {% for category, posts in posts_by_category.items() %}
-            <div class="login-card">
-                <h2>{{ category }}</h2>
-                {% for post in posts %}
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <p class="card-text">{{ post.data }}</p>
-                            <small class="text-muted">{{ post.created_at.strftime('%d.%m.%Y %H:%M') }}</small>
-                        </div>
-                    </div>
-            </div>
+<div class="cards-vertical">
+    <div class="login-card">
+        <h1>Доступные каналы:</h1>
+        {% if categories %}
+        {% for i in categories %}
+        <div>
+            <a href="{{url_for('news.category', category=i[1])}}">{{i[0]}}</a>
+            {% if i[2] > 0 %}
+            Непрочитано: {{i[2]}}
+            {% endif %}
             {% endfor %}
-        {% endfor %}
-    {% else %}
-        <p>Новостей пока нет.</p>
-    {% endif %}
+            {% else %}
+            Нет доступных каналов.
+            {% endif %}
+        </div>
+    </div>
 </div>
+
 {% endblock %}

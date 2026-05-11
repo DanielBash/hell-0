@@ -38,6 +38,7 @@ class RichMetaHandler(logging.Handler):
 def rich(msg):
     console.print(msg, markup=True)
 
+
 handler = RichMetaHandler()
 log = logging.getLogger("news")
 log.setLevel(logging.DEBUG)

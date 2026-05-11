@@ -1,12 +1,10 @@
 """Инициализация настроек всего проекта."""
 
-
 # - импорт модулей
 import dotenv
 import importlib
 import os
 from core.logger import log
-
 
 # -- загрузка шаблона настроек
 dotenv.load_dotenv()

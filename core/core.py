@@ -112,6 +112,7 @@ def post_comment_add(body, user_id, post_id):
     db.session.add(new_post)
     db.session.commit()
 
+
 @timeout(3)
 def cat(cat):
     settings.POST_CATEGORIES[cat]['handler']()

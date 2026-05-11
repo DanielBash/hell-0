@@ -115,7 +115,7 @@ table caption:last-child { caption-side: bottom; margin: .5em 0;}
 pre > code {
   margin: 0;
   position: relative;
-  padding: .8em;
+  /*padding: .8em;              Добавляет какие то ненужные ползунки */
   border-left: .4rem solid var(--cemph);
 }
 code, kbd, samp {

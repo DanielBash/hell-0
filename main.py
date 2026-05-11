@@ -6,7 +6,6 @@ import settings
 from core.flask_shortcuts import after_initialization
 from core.logger import log
 
-
 # - инициализация приложения
 app = create_app(__name__)
 log.info('Приложение создано')

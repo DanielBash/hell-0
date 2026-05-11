@@ -114,3 +114,19 @@ def posts_lenta():
 @post_handler('3dnews', '3DNews')
 def posts_3dnews():
     _fetch_rss('https://3dnews.ru/news/rss/', '3dnews')
+
+
+# Zabivnie:
+@post_handler('theverge', 'The Verge')
+def posts_theverge():
+    _fetch_rss('https://www.theverge.com/rss/index.xml', 'theverge')
+
+
+@post_handler('wired', 'Wired')
+def posts_wired():
+    _fetch_rss('https://www.wired.com/feed/rss', 'wired')
+
+
+@post_handler('MIT', 'MIT Technology Review')
+def posts_mit():
+    _fetch_rss('https://www.technologyreview.com/feed/', 'MIT')

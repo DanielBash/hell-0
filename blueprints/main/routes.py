@@ -1,6 +1,5 @@
 """Файл шаблонов для главной страницы."""
 
-
 # -- импорт модулей
 from flask import url_for, redirect
 from flask import Blueprint
